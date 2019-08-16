@@ -1,6 +1,6 @@
 # Huffman O'cool XVII
 
-##### *"Porque Huffman O'cool XVII é refresco!"* -- Desconhecido
+##### *"Porque Huffman O'cool XVII é refresco!"*
 
 ---
 
