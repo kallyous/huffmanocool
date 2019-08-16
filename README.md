@@ -27,5 +27,7 @@ Projeto avaliativo para disciplina Estrutura de Dados - UFAL, 2019
 
 ### Requisitos
 
-Framework para testes unitários em C: [Criterion](https://github.com/Snaipe/Criterion)
+Framework para testes unitários em C: [Criterion](https://github.com/Snaipe/Criterion)  
+Exemplos de uso na pasta `examples`
 
+---
