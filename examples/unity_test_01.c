@@ -1,7 +1,7 @@
 #include <criterion/criterion.h>
 
 Test(simple, test) {
-cr_assert(0, "Hello World");
+    cr_assert(0, "Hello World");
 }
 
 /* Compilar e rodar:
