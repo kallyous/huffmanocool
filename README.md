@@ -30,6 +30,24 @@ Projeto avaliativo para disciplina Estrutura de Dados - UFAL, 2019
 Framework para testes unitários em C: [Criterion](https://github.com/Snaipe/Criterion)  
 Exemplos de uso na pasta `examples`
 
+### CUnit
+
+**Motivos da escolha do framework Criterion:**
+
+* Desenvolvimento ativo
+* Atual, último release em novembro de 2018
+* Simplicidade de adicionar e configurar no projeto
+* Simplicidade de uso
+* Completo (possui funcionalidades avançadas, para uso em projetos futuros)
+* Integração do release mais recente com repositórios Ubuntu, o que simplifica ainda mais seu uso
+
+**Motivos para não usar o framework CUnit:**
+
+* Desenvolvimento inativo (último release em 2014): https://sourceforge.net/projects/cunit/files/
+* Documentação ruim: http://cunit.sourceforge.net/doc/
+* Adição e configuração com o projeto mais complicada: https://github.com/jacklicn/CUnit
+* Os códigos dos testes exibirão o CU a todo momento: http://cunit.sourceforge.net/doc/writing_tests.html
+
 ---
 
 ### Testes Unitários
