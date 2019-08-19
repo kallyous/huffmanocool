@@ -18,9 +18,10 @@ int main(int argc, char * argv[])
 
     unsigned char * buffer;
     unsigned long buffer_length;
+
     if (!load_file_into_buffer(FILE_NAME_STR, buffer, &buffer_length)) return 255;
 
-
+    // TODO: ler byte a byte o buffer, contando a quatidade de ocorrências e criando a fila ordenada
 
     return 0;
 }

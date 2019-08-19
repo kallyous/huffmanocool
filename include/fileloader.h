@@ -17,7 +17,7 @@ bool load_file_into_buffer(char * file_path, unsigned char * buffer, unsigned lo
     }
 
     // Obtem tamanho do arquivo
-    fseek (fptr, 0, SEEK_END);
+    fseek(fptr, 0, SEEK_END);
     *buffer_length = ftell(fptr);
     rewind(fptr);
 
@@ -37,7 +37,7 @@ bool load_file_into_buffer(char * file_path, unsigned char * buffer, unsigned lo
 
     // Liberar memoria e termina
     fclose(fptr);
-    free(buffer);
+    //free(buffer);
 
     return true;
 }
