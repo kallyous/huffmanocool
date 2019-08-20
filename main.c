@@ -8,6 +8,7 @@
 
 #include "include/argdefs.h"
 #include "include/fileloader.h"
+#include "include/listbuilder.h"
 
 
 
@@ -22,6 +23,7 @@ int main(int argc, char * argv[])
     if (!load_file_into_buffer(FILE_NAME_STR, buffer, &buffer_length)) return 255;
 
     // TODO: ler byte a byte o buffer, contando a quatidade de ocorrências e criando a fila ordenada
+    gen_list_from_buffer(buffer, buffer_length);
 
     return 0;
 }
