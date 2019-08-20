@@ -4,7 +4,9 @@
 #include <stdbool.h>
 
 
-bool load_file_into_buffer(char * file_path, unsigned char * buffer, unsigned long * buffer_length);
+char* load_file_into_buffer(char * file_path, unsigned long * buffer_length);
+
+int write_from_buffer(char * file_name, char * buffer, unsigned long buffer_length);
 
 
 #endif //HUFFMANOCOOL_FILELOADER_H

@@ -20,7 +20,7 @@ typedef struct frequency_linked_list_node
  *
  *  Obs: o buffer permanece inalterado.
  */
-ListNode* gen_list_from_buffer(unsigned char * buffer, unsigned long size_buffer);
+ListNode* gen_list_from_buffer(char * buffer, unsigned long size_buffer);
 
 
 #endif //HUFFMANOCOOL_LISTBUILDER_H
