@@ -20,7 +20,24 @@ typedef struct frequency_linked_list_node
  *
  *  Obs: o buffer permanece inalterado.
  */
-ListNode* gen_list_from_buffer(char * buffer, unsigned long size_buffer);
+ListNode * gen_list_from_buffer(char * buffer, unsigned long size_buffer);
 
+
+/*  Gera nodo vazio
+ *
+ *  O: Ponteiro para o novo nodo vazio.
+ */
+ListNode * EmptyListNode();
+
+
+/*  Gera nodo com valores definidos.
+ *
+ *  I: Byte e sua frequencia.
+ *
+ *  O: Ponteiro para o novo nodo com valores definidos.
+ *
+ *  Obs: O valor de ListNode.next continua NULL.
+ */
+ListNode * FillListNode(char value, unsigned long frequency);
 
 #endif //HUFFMANOCOOL_LISTBUILDER_H

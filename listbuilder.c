@@ -7,6 +7,25 @@
 #include "include/listbuilder.h"
 
 
+ListNode *EmptyListNode()
+{
+    ListNode * n = (ListNode *)malloc(sizeof(ListNode));
+    n->byte = 0;
+    n->count = 0;
+    n->next = NULL;
+    return n;
+}
+
+
+ListNode * FillListNode(char value, unsigned long frequency)
+{
+    ListNode * n = EmptyListNode();
+    n->byte = value;
+    n->count = frequency;
+    return n;
+}
+
+
 ListNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
 {
     // Mensagem de debug
@@ -22,14 +41,14 @@ ListNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
         dfprint("ERRO: gen_list_from_buffer() : recebido buffer == NULL\n");
         return NULL; }
 
-    // Prepara array a segurar contagem previa
+    // Prepara array a segurar elementos durante contagem
     int i;
     int arr_length = 256;
-    char bytes_count[arr_length];
+    ListNode * node_array[arr_length];
 
     // Zera todos os valores da array
     for (i=0; i < arr_length; i++) {
-        bytes_count[i] = 0; }
+        node_array[i] = FillListNode(i, 0); }
 
     // DEBUG: Itera byte a byte pelo buffer, exibindo os bytes para testes
     if (DEBUG) {
@@ -48,16 +67,20 @@ ListNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
     unsigned char b;
     for (i=0; i < buffer_length; i++) {
         b = buffer[i];
-        bytes_count[b]++; }
+        node_array[b]->count++; }
 
     // DEBUG: Exibe resultado da contagem
     if (DEBUG) {
         char * word;
         for (i=0; i < arr_length; i++) {
-            if (bytes_count[i] > 0) {
-                word = char_into_binary_str( (char)i );
-                dfprint(" %s : %d\n", word, bytes_count[i]); } }
+            if (node_array[i]->count > 0) {
+                word = char_into_binary_str( (char)node_array[i]->byte );
+                dfprint(" %s : %d\n", word, node_array[i]->count); } }
         dfprint("\n"); }
+
+    // TODO: Ordena array
+
+    // TODO: Conecta vizinhos
 
     return NULL;
 }
