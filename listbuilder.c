@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "include/globals.h"
+#include "include/stdoutdebug.h"
 #include "include/listbuilder.h"
 
 

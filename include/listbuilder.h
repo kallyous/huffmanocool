@@ -24,4 +24,5 @@ typedef struct frequency_linked_list
  */
 FrequencyList* gen_list_from_buffer(unsigned char * buffer, unsigned long size_buffer);
 
+
 #endif //HUFFMANOCOOL_LISTBUILDER_H

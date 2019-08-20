@@ -6,6 +6,8 @@
 #include <math.h>
 #include <time.h>
 
+#include "include/globals.h"
+#include "include/stdoutdebug.h"
 #include "include/argdefs.h"
 #include "include/fileloader.h"
 #include "include/listbuilder.h"
