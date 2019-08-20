@@ -2,14 +2,12 @@
 #define HUFFMANOCOOL_LISTBUILDER_H
 
 
-typedef struct frequency_linked_list
+typedef struct frequency_linked_list_node
 {
     unsigned char byte;
     unsigned long count;
-    struct frequency_linked_list * next;
-    struct frequency_linked_list * _0;
-    struct frequency_linked_list * _1;
-} FrequencyList;
+    struct frequency_linked_list* next;
+} ListNode;
 
 
 /*  Gera lista encadeada a partir do buffer de bytes recebido.
@@ -22,7 +20,7 @@ typedef struct frequency_linked_list
  *
  *  Obs: o buffer permanece inalterado.
  */
-FrequencyList* gen_list_from_buffer(unsigned char * buffer, unsigned long size_buffer);
+ListNode* gen_list_from_buffer(unsigned char * buffer, unsigned long size_buffer);
 
 
 #endif //HUFFMANOCOOL_LISTBUILDER_H

@@ -6,8 +6,8 @@
 #include "include/listbuilder.h"
 
 
-FrequencyList* gen_list_from_buffer(unsigned char * buffer, unsigned long size_buffer)
+ListNode* gen_list_from_buffer(unsigned char * buffer, unsigned long size_buffer)
 {
-    printf("Tudo OK\n");
+    printf("gen_list_from_buffer() connectado!\n");
     return NULL;
 }
