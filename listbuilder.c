@@ -27,6 +27,35 @@ ListNode * FillListNode(char value, unsigned long frequency)
 }
 
 
+ListNode* link_ordered_array(ListNode * node_arr[], int length)
+{
+    dfprint("Gerando lista encadeada...\n");
+
+    int i = 0;
+    while (node_arr[i]->count < 1) i++;
+
+    ListNode* head = node_arr[i];
+
+    char * word;
+    for (; i < length-1; i++) {
+        node_arr[i]->next = node_arr[i+1];
+        word = char_into_binary_str( (char)node_arr[i]->byte );
+        dfprint(" %s : %d\n", word, node_arr[i]->count); }
+    dfprint("\n");
+
+    // DEBUG: Testa conexoes da lista encadeada
+    if (DEBUG) {
+        dfprint("Testando segmentaçao da lista encadeada...\n");
+        ListNode* n = head;
+        while (n->next) {
+            dfprint(" %s -> %d\n", char_into_binary_str((char)n->byte), n->count);
+            n = n->next; }
+        dfprint(" %s -> %d\n\n", char_into_binary_str((char)n->byte), n->count); }
+
+    return head;
+}
+
+
 ListNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
 {
     // Mensagem de debug
