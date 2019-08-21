@@ -5,6 +5,7 @@
 #include "include/assist.h"
 #include "include/stdoutdebug.h"
 #include "include/listbuilder.h"
+#include "include/sort.h"
 
 
 ListNode *EmptyListNode()
@@ -79,6 +80,15 @@ ListNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
         dfprint("\n"); }
 
     // TODO: Ordena array
+    bubble_sort(node_array, arr_length);
+    // DEBUG: Exibe rersultado da ordenaçao
+    if (DEBUG) {
+        char * word;
+        for (i=0; i < arr_length; i++) {
+            if (node_array[i]->count > 0) {
+                word = char_into_binary_str( (char)node_array[i]->byte );
+                dfprint(" %s : %d\n", word, node_array[i]->count); } }
+        dfprint("\n"); }
 
     // TODO: Conecta vizinhos
 
