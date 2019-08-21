@@ -42,3 +42,5 @@ char* byte_stream_into_binary_str(char * stream, unsigned long stream_length)
     dfprint("\n");
     return binary_str;
 }
+
+

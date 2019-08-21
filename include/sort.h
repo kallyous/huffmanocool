@@ -5,7 +5,7 @@
 #include "listbuilder.h"
 
 
-void bubble_sort(ListNode * arr[], int length);
+void bubble_sort(HufNode * arr[], int length);
 
 
 #endif //HUFFMANOCOOL_SORT_H

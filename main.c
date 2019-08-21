@@ -18,22 +18,22 @@
 
 int main(int argc, char * argv[])
 {
+    // Interpreta e valida argumentos recebidos
     if (!parse_arguments(argc, argv)) return 255;
+
+    // Boas vindas
     printf("Huffman O'cool XVIII é refresco!\n");
 
+    // Carrega arquivo a compactar no buffer (e seu tamanho em buffer_length)
     char * buffer;
     unsigned long buffer_length;
-
     buffer = load_file_into_buffer(FILE_NAME_STR, &buffer_length);
 
-    // TODO: ler byte a byte o buffer, contando a quatidade de ocorrências e criando a fila ordenada
+    // Gera lista encadeada de frequencia de ocorrencia dos bytes
+    HufNode* list_head =  gen_list_from_buffer(buffer, buffer_length);
 
-    // Conecta listbuilder.c
-    gen_list_from_buffer(buffer, buffer_length);
-
-    // Conecta treebuilder.c
-    ListNode * n;
-    gen_huffman_tree_from_frequency_list(n);
+    // Constroi arvore de huffman
+    HufNode* tree_root = build_huffman_tree(list_head);
 
     return 0;
 }

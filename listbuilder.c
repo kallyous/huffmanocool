@@ -8,45 +8,47 @@
 #include "include/sort.h"
 
 
-ListNode *EmptyListNode()
+HufNode *EmptyHufNode()
 {
-    ListNode * n = (ListNode *)malloc(sizeof(ListNode));
+    HufNode * n = (HufNode *)malloc(sizeof(HufNode));
     n->byte = 0;
     n->count = 0;
     n->next = NULL;
+    n->left = NULL;
+    n->right = NULL;
     return n;
 }
 
 
-ListNode * FillListNode(char value, unsigned long frequency)
+HufNode * FillHufNode(char value, unsigned long frequency)
 {
-    ListNode * n = EmptyListNode();
+    HufNode * n = EmptyHufNode();
     n->byte = value;
     n->count = frequency;
     return n;
 }
 
 
-ListNode* link_ordered_array(ListNode * node_arr[], int length)
+HufNode* link_ordered_array(HufNode * node_arr[], int length)
 {
     dfprint("Gerando lista encadeada...\n");
 
     int i = 0;
     while (node_arr[i]->count < 1) i++;
 
-    ListNode* head = node_arr[i];
+    HufNode* head = node_arr[i];
 
     char * word;
     for (; i < length-1; i++) {
         node_arr[i]->next = node_arr[i+1];
         word = char_into_binary_str( (char)node_arr[i]->byte );
         dfprint(" %s : %d\n", word, node_arr[i]->count); }
-    dfprint("\n");
+    dfprint(" %s : %d\n\n", word, node_arr[i]->count);
 
     // DEBUG: Testa conexoes da lista encadeada
     if (DEBUG) {
         dfprint("Testando segmentaçao da lista encadeada...\n");
-        ListNode* n = head;
+        HufNode* n = head;
         while (n->next) {
             dfprint(" %s -> %d\n", char_into_binary_str((char)n->byte), n->count);
             n = n->next; }
@@ -56,7 +58,7 @@ ListNode* link_ordered_array(ListNode * node_arr[], int length)
 }
 
 
-ListNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
+HufNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
 {
     // Mensagem de debug
     dfprint("gen_list_from_buffer() connectado!\n");
@@ -74,11 +76,11 @@ ListNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
     // Prepara array a segurar elementos durante contagem
     int i;
     int arr_length = 256;
-    ListNode * node_array[arr_length];
+    HufNode * node_array[arr_length];
 
     // Zera todos os valores da array
     for (i=0; i < arr_length; i++) {
-        node_array[i] = FillListNode(i, 0); }
+        node_array[i] = FillHufNode(i, 0); }
 
     // DEBUG: Itera byte a byte pelo buffer, exibindo os bytes para testes
     if (DEBUG) {
@@ -120,7 +122,7 @@ ListNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
         dfprint("\n"); }
 
     // TODO: Conecta vizinhos
-    link_ordered_array(node_array, arr_length);
+    HufNode* head = link_ordered_array(node_array, arr_length);
 
-    return NULL;
+    return head;
 }

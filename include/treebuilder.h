@@ -6,22 +6,6 @@
 #include "listbuilder.h"
 
 
-typedef struct huffman_tree_node
-{
-    unsigned char byte;
-    unsigned int weight;
-    struct huffman_tree_node* left;
-    struct huffman_tree_node* right;
-
-} TreeNode;
-
-
-/*  Gera um novo nodo de arvore, desconectado
- *
- */
-TreeNode* EmptyTreeNode();
-
-
 /*  Gera Arvore de Huffman a partir de lista encadeada com frequencia dos
  *  bytes em ordem crescente.
  *
@@ -34,7 +18,7 @@ TreeNode* EmptyTreeNode();
  *  Obs: Nao desaloca/libera memoria da lista encadeada recebida. Isso deve ser
  *          feito noutro lugar.
  */
-TreeNode* gen_huffman_tree_from_frequency_list(ListNode* freq_list);
+HufNode* build_huffman_tree(HufNode* freq_list);
 
 
 #endif //HUFFMANOCOOL_TREEBUILDER_H

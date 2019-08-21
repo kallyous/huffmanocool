@@ -2,12 +2,14 @@
 #define HUFFMANOCOOL_LISTBUILDER_H
 
 
-typedef struct frequency_linked_list_node
+typedef struct HufNode
 {
     unsigned char byte;
     unsigned long count;
-    struct frequency_linked_list * next;
-} ListNode;
+    struct HufNode* next;
+    struct HufNode* left;
+    struct HufNode* right;
+} HufNode;
 
 
 /*  Gera lista encadeada a partir do buffer de bytes recebido.
@@ -20,14 +22,14 @@ typedef struct frequency_linked_list_node
  *
  *  Obs: o buffer permanece inalterado.
  */
-ListNode * gen_list_from_buffer(char * buffer, unsigned long size_buffer);
+HufNode * gen_list_from_buffer(char * buffer, unsigned long size_buffer);
 
 
 /*  Gera nodo vazio
  *
  *  O: Ponteiro para o novo nodo vazio.
  */
-ListNode * EmptyListNode();
+HufNode * EmptyHufNode();
 
 
 /*  Gera nodo com valores definidos.
@@ -36,20 +38,20 @@ ListNode * EmptyListNode();
  *
  *  O: Ponteiro para o novo nodo com valores definidos.
  *
- *  Obs: O valor de ListNode.next continua NULL.
+ *  Obs: O valor de HufNode.next continua NULL.
  */
-ListNode * FillListNode(char value, unsigned long frequency);
+HufNode * FillHufNode(char value, unsigned long frequency);
 
 
-/*  Conecta ListNode's de uma array e retorna a cabeça da lista linkada.
+/*  Conecta HufNode's de uma array e retorna a cabeça da lista linkada.
  *
- *  I: Ponteiro para o primeiro elemento de uma array de ponteiros para ListNode,
+ *  I: Ponteiro para o primeiro elemento de uma array de ponteiros para HufNode,
  *      e o tamanho da array.
  *
  *  O: Cabeça da lista encadeada contendo somente os elementos com ao menos uma
  *      ocorrencia.
  */
-ListNode* link_ordered_array(ListNode * arr[], int length);
+HufNode* link_ordered_array(HufNode * arr[], int length);
 
 
 #endif //HUFFMANOCOOL_LISTBUILDER_H

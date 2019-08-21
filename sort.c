@@ -2,10 +2,10 @@
 #include "include/listbuilder.h"
 
 
-void bubble_sort(ListNode * arr[], int length)
+void bubble_sort(HufNode * arr[], int length)
 {
     int i, j;
-    ListNode * temp;
+    HufNode * temp;
     for (i=0; i < length-1; i++) {
         for (j=0; j < length-i-1; j++) {
             if (arr[j]->count > arr[j+1]->count) {
