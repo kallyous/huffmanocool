@@ -6,7 +6,7 @@ typedef struct frequency_linked_list_node
 {
     unsigned char byte;
     unsigned long count;
-    struct frequency_linked_list* next;
+    struct frequency_linked_list * next;
 } ListNode;
 
 
@@ -39,5 +39,17 @@ ListNode * EmptyListNode();
  *  Obs: O valor de ListNode.next continua NULL.
  */
 ListNode * FillListNode(char value, unsigned long frequency);
+
+
+/*  Conecta ListNode's de uma array e retorna a cabeça da lista linkada.
+ *
+ *  I: Ponteiro para o primeiro elemento de uma array de ponteiros para ListNode,
+ *      e o tamanho da array.
+ *
+ *  O: Cabeça da lista encadeada contendo somente os elementos com ao menos uma
+ *      ocorrencia.
+ */
+ListNode* link_ordered_array(ListNode * arr[], int length);
+
 
 #endif //HUFFMANOCOOL_LISTBUILDER_H

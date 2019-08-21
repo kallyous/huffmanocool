@@ -91,6 +91,7 @@ ListNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
         dfprint("\n"); }
 
     // TODO: Conecta vizinhos
+    link_ordered_array(node_array, arr_length);
 
     return NULL;
 }
