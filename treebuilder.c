@@ -42,6 +42,11 @@ HufNode* build_huffman_tree(HufNode * head)
         new->left = left;
         new->right = right;
 
+        // Se nao existe right->next nessa parte do processo, chegamos ao final da fila
+        if (!right->next) {
+            root = new;
+            break; }
+
         // Navega lista buscando posiçao onde inserir new
         HufNode* next_node = right->next;
         while (new->count > next_node->count)
@@ -85,5 +90,6 @@ HufNode* build_huffman_tree(HufNode * head)
             list_head = right->next; } // Atualiza head
     }
 
+    dfprint("build_huffman_tree() :: Sucesso na criaçao da arvore!\n");
     return root;
 }
