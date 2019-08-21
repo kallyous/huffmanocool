@@ -220,3 +220,20 @@ HufNode* build_huffman_tree(HufNode * head)
     dfprint("build_huffman_tree() :: Sucesso na criaçao da arvore!\n");
     return root;
 }
+
+
+
+void build_tree_preorder_array(HufNode* node, char* buffer)
+{
+    if (!node) return;
+
+    // Caso seja uma folha, escapa '*' e '\' caso presente, colocando um '\' na frente.
+    if (!(node->left || node->right)) // Checa se eh folha
+        if (node->byte == '*' || node->byte == '\\') sprintf(buffer, "%s%c", buffer, '\\');
+
+    // Adiciona byte atual na string
+    sprintf(buffer, "%s%c", buffer, node->byte);
+
+    build_tree_preorder_array(node->left, buffer);
+    build_tree_preorder_array(node->right, buffer);
+}

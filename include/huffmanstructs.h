@@ -76,4 +76,18 @@ HufNode* build_huffman_tree(HufNode* freq_list);
 
 
 
+/*  Gera string no formato pre-ordem a partir de uma arvore.
+ *
+ *  I: Nodo raiz de uma arvore huffman e buffer a armazenar string sendo construida.
+ *
+ *  Obs: Caracteres * sao escapados com um '\' antes do '*'. Usa recursao.
+ *
+ *  ATENÇAO: Esta funçao precisa de testes com todos os 256 valores possiveis
+ *          de bytes, para ter certeza qu nao vai bugar com bytes que
+ *          representam valores bugados. Nao confiamos em strings de char.
+ */
+void build_tree_preorder_array(HufNode* node, char* buffer);
+
+
+
 #endif //HUFFMANOCOOL_HUFFMANSTRUCTS_H

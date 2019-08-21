@@ -34,5 +34,12 @@ int main(int argc, char * argv[])
     // Constroi arvore de huffman
     HufNode* tree_root = build_huffman_tree(list_head);
 
+    // Libera buffer pra receber a string representando a arvore.
+    free(buffer);
+
+    // Constroi string contendo representaçao da arvore.
+    build_tree_preorder_array(tree_root, buffer);
+    dfprint("Arvore na notaçao pre-ordem:\n%s\n\n", buffer);
+
     return 0;
 }
