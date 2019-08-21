@@ -7,7 +7,10 @@
 #include "include/stdoutdebug.h"
 
 
+
 extern bool DEBUG;
+
+
 
 void dfprint(const char * format, ...)
 {
@@ -18,6 +21,7 @@ void dfprint(const char * format, ...)
         va_end( arglist ); // Libera memória
     }
 }
+
 
 
 void load_debug_setting(int argc, char * argv[])

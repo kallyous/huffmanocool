@@ -1,5 +1,6 @@
 #include "include/sort.h"
-#include "include/listbuilder.h"
+#include "include/huffmanstructs.h"
+
 
 
 void bubble_sort(HufNode * arr[], int length)

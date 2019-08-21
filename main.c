@@ -11,8 +11,7 @@
 #include "include/stdoutdebug.h"
 #include "include/argdefs.h"
 #include "include/fileloader.h"
-#include "include/listbuilder.h"
-#include "include/treebuilder.h"
+#include "include/huffmanstructs.h"
 
 
 

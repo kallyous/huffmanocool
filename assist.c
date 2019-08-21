@@ -24,6 +24,8 @@ char* char_into_binary_str(char c)
     return rep;
 }
 
+
+
 char* byte_stream_into_binary_str(char * stream, unsigned long stream_length)
 {
     char* binary_str;

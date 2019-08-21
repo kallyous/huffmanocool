@@ -7,6 +7,8 @@
 #include "include/stdoutdebug.h"
 #include "include/fileloader.h"
 
+
+
 char* load_file_into_buffer(char * file_path, unsigned long * buffer_length)
 {
     FILE * fptr;
@@ -46,6 +48,7 @@ char* load_file_into_buffer(char * file_path, unsigned long * buffer_length)
 
     return buffer;
 }
+
 
 
 int write_from_buffer(char * file_name, char * buffer, unsigned long buffer_length)

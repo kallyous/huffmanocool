@@ -7,8 +7,12 @@
 #include "include/stdoutdebug.h"
 #include "include/argdefs.h"
 
+
+
 extern unsigned int FILE_NAME_SIZE;
 extern char * FILE_NAME_STR;
+
+
 
 bool parse_arguments(int argc, char * argv[])
 {

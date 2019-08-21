@@ -2,10 +2,13 @@
 #define HUFFMANOCOOL_SORT_H
 
 
-#include "listbuilder.h"
+
+#include "huffmanstructs.h"
+
 
 
 void bubble_sort(HufNode * arr[], int length);
+
 
 
 #endif //HUFFMANOCOOL_SORT_H
