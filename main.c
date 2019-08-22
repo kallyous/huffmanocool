@@ -13,7 +13,7 @@
 #include "include/fileloader.h"
 #include "include/huffmanstructs.h"
 #include "include/chartable.h"
-
+#include "include/packing.h"
 
 
 int main(int argc, char * argv[])
@@ -43,25 +43,58 @@ int main(int argc, char * argv[])
     // Tamanho maximo que uma string da arvore pode chegar, mais o caracter '\0' no final.
     int tree_str_max_legth = 515;// Se tivermos '*' e '\', teremos que gastar mais dois bytes pra escapar cada um.
     char tree_str[tree_str_max_legth];
-    for (int j=0; j < tree_str_max_legth; j++) tree_str[j] = '\0'; // Limpa toda area da memoria
+
+    // Limpa toda area da memoria
+    for (int j=0; j < tree_str_max_legth; j++) tree_str[j] = '\0';
+
+    // Constroi string em pre-ordem que descreve a arvore
     build_tree_preorder_array(tree_root, tree_str);
-    int tree_str_curr_length = strlen(tree_str) - 1; // Exclui o '\0' da contagem, pois nao entra no cabeçalho.
+
+    // Armazena o tamanho do stream de bytes que contem a arvore.
+    // Exclui o '\0' da contagem, pois nao entra-ra no cabeçalho.
+    int tree_str_curr_length = strlen(tree_str) - 1;
+
     dfprint("Arvore na notaçao pre-ordem (tamanho %d):\n%s\n\n", tree_str_curr_length, tree_str);
 
+
     // Tabela de compressao
+
+    // Qtd de valores possiveis de se representar com 1 byte
     int byte_table_length = 256;
+    // Cada indice segura a representaçao binaria de uma folha, em string de 0/1's
     char* byte_table[byte_table_length];
+
+    // Limpa todas as strings
     for (int i=0; i < byte_table_length; i++) {
         byte_table[i] = (char*)malloc(sizeof(char)*9);
         strcpy(byte_table[i], ""); }
-    char code[9];
-    strcpy(code, "");
 
-    // Constroi tabela de bytes compactados
-    dfprint("Construindo tabela de bytes compactados...\n");
-    build_packing_table(tree_root, byte_table, code);
     // TODO: Fim da gandaia
 
+
+    // Constroi tabela de bytes compactados
+    dfprint("Construindo tabela de bytes compactados...\n\n");
+    char code[9]; // String temporaria para o processo de empacotamento
+    strcpy(code, ""); // Começa vazia
+    // Viaja pela arvore construindo a tabela de compressao
+    build_packing_table(tree_root, byte_table, code);
+
+    // Exibe resultado apenas para valores definidos
+    if (DEBUG) {
+        dfprint("Tabela:\n");
+        for (int k=0; k < byte_table_length; k++)
+            if (strcmp(byte_table[k], "") != 0) dfprint(" %c -> %s\n", k, byte_table[k]);
+        dfprint("\n\n"); }
+
+    // Em novo buffer, taca material compactado
+    char packing_buffer[buffer_length];
+    // Limpa buffer com '\0' pra usarmos operaçoes de srting.
+    for (int l=0; l < buffer_length; l++) packing_buffer[l] = '\0';
+    // Armazena quantos bits de lixo ficou no ultimo byte
+    char last_byte_garbage = 0;
+
+    // Comprime buffer para dentro de packing_buffer e armazena o tamanho final do stream de bytes.
+    unsigned long packing_buffer_stream_length = compress_byte_stream(buffer, packing_buffer, buffer_length, byte_table, &last_byte_garbage);
 
     return 0;
 }
