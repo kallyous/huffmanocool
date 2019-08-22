@@ -227,7 +227,7 @@ void build_tree_preorder_array(HufNode* node, char* buffer)
 {
     if (!node) return;
 
-    // Caso seja uma folha, escapa '*' e '\' caso presente, colocando um '\' na frente.
+    // Caso seja uma folha, escapa '*' e '\', colocando um '\' na frente.
     if (!(node->left || node->right)) // Checa se eh folha
         if (node->byte == '*' || node->byte == '\\') sprintf(buffer, "%s%c", buffer, '\\');
 
