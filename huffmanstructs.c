@@ -237,3 +237,6 @@ void build_tree_preorder_array(HufNode* node, char* buffer)
     build_tree_preorder_array(node->left, buffer);
     build_tree_preorder_array(node->right, buffer);
 }
+
+
+

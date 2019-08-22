@@ -12,6 +12,7 @@
 #include "include/argdefs.h"
 #include "include/fileloader.h"
 #include "include/huffmanstructs.h"
+//#include "include/chartable.h"
 
 
 
@@ -34,12 +35,28 @@ int main(int argc, char * argv[])
     // Constroi arvore de huffman
     HufNode* tree_root = build_huffman_tree(list_head);
 
-    // Libera buffer pra receber a string representando a arvore.
-    free(buffer);
-
     // Constroi string contendo representaçao da arvore.
-    build_tree_preorder_array(tree_root, buffer);
-    dfprint("Arvore na notaçao pre-ordem:\n%s\n\n", buffer);
+    char* tree_str;
+    build_tree_preorder_array(tree_root, tree_str);
+    int tree_str_length = strlen(tree_str) - 1; // Exclui o '\0' da contagem, pois nao entra no cabeçalho.
+    dfprint("Arvore na notaçao pre-ordem (tamanho %d):\n%s\n\n", tree_str_length, tree_str);
+
+    /*
+    // TODO: Mover esta gandaia para o lugar adequado
+    int byte_table_length = 256;
+    char* byte_table[byte_table_length];
+    //byte_table = (char**)malloc(sizeof(char*) * byte_table_length);
+    for (int i=0; i < byte_table_length; i++) {
+        byte_table[i] = (char*)malloc(sizeof(char)*9);
+        strcpy(byte_table[i], ""); }
+    //char code[9];
+//    strcpy(code, "");
+    // Fim da gandaia
+     */
+
+    // Constroi tabela de bytes compactados
+    dfprint("Construindo tabela de bytes compactados...\n");
+    //build_packing_table(tree_root, byte_table, code);
 
     return 0;
 }
