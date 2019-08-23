@@ -111,7 +111,7 @@ int main(int argc, char * argv[])
 
     // Descarrega tudo em arquivo:
     FILE* fptr;
-    fptr = fopen("output.huff", "wb");
+    fptr = fopen("bin/output.huff", "wb");
     fwrite(&header_meta, sizeof(header_meta), 1, fptr);
 
     fclose(fptr);
