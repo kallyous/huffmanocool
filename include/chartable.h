@@ -19,4 +19,8 @@ void build_packing_table(HufNode* node, char* table[], char* code);
 
 
 
+char** prepare_packing_table();
+
+
+
 #endif //HUFFMANOCOOL_CHARTABLE_H

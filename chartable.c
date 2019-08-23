@@ -1,7 +1,23 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "include/chartable.h"
+
+
+
+char** prepare_packing_table()
+{
+    int byte_table_length = 256;
+    char** table = (char**)malloc(sizeof(char*) * 256);
+
+    // Limpa todas as strings
+    for (int i=0; i < byte_table_length; i++) {
+        table[i] = (char*)malloc(sizeof(char)*9);
+        strcpy(table[i], ""); }
+
+    return table;
+}
 
 
 

@@ -15,4 +15,14 @@
 unsigned char* compress_byte_stream(const char* stream, unsigned long stream_length, char* table[], unsigned long * compressed_size, int16_t* garbage_length);
 
 
+/*  Constroi o cabeçalho do arquivo compactado
+ *
+ *  I: Quantidade de bits de lixo no ultimo byte do arquivo compactado e a string contendo a arvore em pre-ordem
+ *
+ *  O: Cadeia de bytes contendo o cabeçalho
+ */
+unsigned char* build_header(unsigned int last_byte_garbage, const char* tree_str);
+
+
+
 #endif //HUFFMANOCOOL_PACKING_H

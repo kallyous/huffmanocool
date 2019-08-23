@@ -35,42 +35,20 @@ int main(int argc, char * argv[])
     // Constroi arvore de huffman
     HufNode* tree_root = build_huffman_tree(list_head);
 
-
-    // TODO: Mover esta gandaia para o lugar adequado
-
-    // Constroi string contendo representaçao da arvore.
-
-    // Tamanho maximo que uma string da arvore pode chegar, mais o caracter '\0' no final.
-    int tree_str_max_legth = 515;// Se tivermos '*' e '\', teremos que gastar mais dois bytes pra escapar cada um.
+    // Prepara pra montar a string representando a arvore em pre-ordem
+    int tree_str_max_legth = 515;// Espaço mais que sufuciente para armazenar os bytes da arvore em string
     char tree_str[tree_str_max_legth];
+    for (int j=0; j < tree_str_max_legth; j++) tree_str[j] = '\0'; // Limpa região
 
-    // Limpa toda area da memoria
-    for (int j=0; j < tree_str_max_legth; j++) tree_str[j] = '\0';
-
-    // Constroi string em pre-ordem que descreve a arvore
+    // Constroi stream em pre-ordem que descreve a arvore
     build_tree_preorder_array(tree_root, tree_str);
 
     // Armazena o tamanho do stream de bytes que contem a arvore.
-    // Exclui o '\0' da contagem, pois nao entra-ra no cabeçalho.
     int16_t tree_str_curr_length = strlen(tree_str);
-
     dfprint("Arvore na notaçao pre-ordem (tamanho %d):\n%s\n\n", tree_str_curr_length, tree_str);
 
-
-    // Tabela de compressao
-
-    // Qtd de valores possiveis de se representar com 1 byte
-    int byte_table_length = 256;
-    // Cada indice segura a representaçao binaria de uma folha, em string de 0/1's
-    char* byte_table[byte_table_length];
-
-    // Limpa todas as strings
-    for (int i=0; i < byte_table_length; i++) {
-        byte_table[i] = (char*)malloc(sizeof(char)*9);
-        strcpy(byte_table[i], ""); }
-
-    // TODO: Fim da gandaia
-
+    // Preara tabela descritiva dos bytes e suas versões compactadas
+    char** byte_table = prepare_packing_table();
 
     // Constroi tabela de bytes compactados
     dfprint("Construindo tabela de bytes compactados...\n\n");
@@ -79,16 +57,16 @@ int main(int argc, char * argv[])
     // Viaja pela arvore construindo a tabela de compressao
     build_packing_table(tree_root, byte_table, code);
 
-    // Exibe resultado apenas para valores definidos
+    // Exibe tabela
     if (DEBUG) {
         dfprint("Tabela:\n");
-        for (int k=0; k < byte_table_length; k++)
+        for (int k=0; k < 256; k++)
             if (strcmp(byte_table[k], "") != 0) dfprint(" %c -> %s\n", k, byte_table[k]);
         dfprint("\n\n"); }
 
-    // Em novo buffer, taca material compactado
+    // Novo buffer pra receber material compactado
     unsigned char* packing_buffer;
-    // Tamanho em bytes dos dados compactados
+    // Armazena tamanho do buffer depois de compactado
     unsigned long packed_length;
     // Armazena quantos bits de lixo ficou no ultimo byte
     int16_t last_byte_garbage;
@@ -96,23 +74,21 @@ int main(int argc, char * argv[])
     // Comprime buffer para dentro de packing_buffer e armazena o tamanho final do stream de bytes.
     packing_buffer = compress_byte_stream(buffer, buffer_length, byte_table, &packed_length, &last_byte_garbage);
 
+    // Olhadinha no estado atual
     if (DEBUG) {
-        dfprint("\nTamanho compactado: %u\n", packed_length);
-        dfprint("Bits de lixo: %d\n\n", last_byte_garbage);
+        dfprint("Tamanho compactado: %u\n", packed_length);
+        dfprint("Bits de lixo: %d\n", last_byte_garbage);
         unsigned char result[packed_length + 1];
         strcpy(result, byte_stream_into_binary_str(packing_buffer, packed_length));
         printf(" %s\n\n", result); }
 
-    // Prepara cabeçalho
-    u_int16_t header_meta = 0;
-    last_byte_garbage = last_byte_garbage << 13;
-    header_meta |= last_byte_garbage;
-    header_meta |= tree_str_curr_length;
+    char* header = build_header(last_byte_garbage, tree_str);
 
-    // Descarrega tudo em arquivo:
+    // Escreve arquivo
     FILE* fptr;
     fptr = fopen("bin/output.huff", "wb");
-    fwrite(&header_meta, sizeof(header_meta), 1, fptr);
+    fwrite(header, strlen(tree_str)+2, 1, fptr);
+    fwrite(packing_buffer, packed_length, 1, fptr);
 
     fclose(fptr);
 

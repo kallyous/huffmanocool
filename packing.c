@@ -1,15 +1,45 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "include/globals.h"
 #include "include/assist.h"
 #include "include/packing.h"
 #include "include/stdoutdebug.h"
 
 
+
+unsigned char* build_header(unsigned int last_byte_garbage, const char* tree_str)
+{
+//    u_int16_t header_meta = 0;
+//    last_byte_garbage = last_byte_garbage << 13;
+//    header_meta |= last_byte_garbage;
+//    header_meta |= tree_str_curr_length;
+
+    unsigned int tree_len = strlen(tree_str);
+    unsigned char* header = (char*)malloc(sizeof(char) * (tree_len + 2));
+
+    header[0] = last_byte_garbage << 5;
+    header[0] |= 8 >> tree_len;
+    header[1] = tree_len;
+
+    // Copia bytes relevantes de tree_str para dentro do cabeçalho
+    for (int i=0; i < tree_len; i++)
+        header[i+2] = tree_str[i];
+
+    if (DEBUG) {
+        char* test = byte_stream_into_binary_str(header, tree_len + 2);
+        dfprint("Header so far: %s\n", header); }
+
+    return header;
+}
+
+
+
 unsigned char* compress_byte_stream(const char* stream, unsigned long stream_length,
         char* table[], unsigned long * compressed_size, int16_t* garbage_length)
 {
-    dfprint("Stream length: %u\n", stream_length);
+    dfprint("compress_byte_stream()::Estado inicial\n");
+    dfprint("stream_length: %u\n", stream_length);
 
     // O tamanho maximo teorico de buffer nunca sera maior que o tamanho de stream
     unsigned char* buffer = (char*)malloc(sizeof(char) * stream_length);
@@ -20,8 +50,9 @@ unsigned char* compress_byte_stream(const char* stream, unsigned long stream_len
     // Taca 0 em tudo de buffer
     for (int a=0; a < stream_length; a++) buffer[a] = 0;
     buffer[stream_length-1] = '\0';
-    dfprint("\n\nEstado do buffer:\n");
-    dfprint("%s\n\n", byte_stream_into_binary_str(buffer, stream_length));
+
+    dfprint("Estado inicial do buffer criado:\n");
+    dfprint("%s\n", byte_stream_into_binary_str(buffer, stream_length));
 
     unsigned long sb; // Registra o byte sendo lido de stream
     *compressed_size = 1; // Tamanho final do stream compactado de bytes (buffer)
@@ -56,9 +87,7 @@ unsigned char* compress_byte_stream(const char* stream, unsigned long stream_len
             if (++bit > 7) { // Passou do ultimo bit do byte atual
                 byte++; // Avança para o proximo byte
                 bit = 0; // Primeiro bit do proximo byte sera definido no proximo ciclo
-                *compressed_size += 1; // Mais um byte sera usado, aumentando o tamanho final em 1
-                dfprint("\n\nEstado do buffer:\n");
-                dfprint("%s\n\n", byte_stream_into_binary_str(buffer, stream_length)); }
+                *compressed_size += 1; } // Mais um byte sera usado, aumentando o tamanho final em 1
         }
     }
 
@@ -73,7 +102,8 @@ unsigned char* compress_byte_stream(const char* stream, unsigned long stream_len
     // Adiciona um '\0' apos o ultimo indice de buffer, transformando-o numa string.
     buffer[*compressed_size] = '\0'; // Torna possivel usar strcpy() e sprintf() com o resultado final.
 
-    dfprint("\n %s\n", byte_stream_into_binary_str(buffer, *compressed_size));
+    dfprint("compress_byte_stream()::Resultado\n");
+    dfprint("%s\n", byte_stream_into_binary_str(buffer, *compressed_size));
 
     // Terminado. Retorne a quantidade de bytes em uso por buffer
     return buffer;
