@@ -52,7 +52,7 @@ int main(int argc, char * argv[])
 
     // Armazena o tamanho do stream de bytes que contem a arvore.
     // Exclui o '\0' da contagem, pois nao entra-ra no cabeçalho.
-    int tree_str_curr_length = strlen(tree_str) - 1;
+    int16_t tree_str_curr_length = strlen(tree_str);
 
     dfprint("Arvore na notaçao pre-ordem (tamanho %d):\n%s\n\n", tree_str_curr_length, tree_str);
 
@@ -91,7 +91,7 @@ int main(int argc, char * argv[])
     // Tamanho em bytes dos dados compactados
     unsigned long packed_length;
     // Armazena quantos bits de lixo ficou no ultimo byte
-    char last_byte_garbage;
+    int16_t last_byte_garbage;
 
     // Comprime buffer para dentro de packing_buffer e armazena o tamanho final do stream de bytes.
     packing_buffer = compress_byte_stream(buffer, buffer_length, byte_table, &packed_length, &last_byte_garbage);
@@ -102,6 +102,19 @@ int main(int argc, char * argv[])
         unsigned char result[packed_length + 1];
         strcpy(result, byte_stream_into_binary_str(packing_buffer, packed_length));
         printf(" %s\n\n", result); }
+
+    // Prepara cabeçalho
+    u_int16_t header_meta = 0;
+    last_byte_garbage = last_byte_garbage << 13;
+    header_meta |= last_byte_garbage;
+    header_meta |= tree_str_curr_length;
+
+    // Descarrega tudo em arquivo:
+    FILE* fptr;
+    fptr = fopen("output.huff", "wb");
+    fwrite(&header_meta, sizeof(header_meta), 1, fptr);
+
+    fclose(fptr);
 
     return 0;
 }

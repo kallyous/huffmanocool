@@ -12,7 +12,7 @@
  *
  *  Obs: Ao terminar, garbage_length tera quantos bits de lixo o ultimo byte possui.
  */
-unsigned char* compress_byte_stream(const char* stream, unsigned long stream_length, char* table[], unsigned long * compressed_size, char* garbage_length);
+unsigned char* compress_byte_stream(const char* stream, unsigned long stream_length, char* table[], unsigned long * compressed_size, int16_t* garbage_length);
 
 
 #endif //HUFFMANOCOOL_PACKING_H

@@ -7,7 +7,7 @@
 
 
 unsigned char* compress_byte_stream(const char* stream, unsigned long stream_length,
-        char* table[], unsigned long * compressed_size, char* garbage_length)
+        char* table[], unsigned long * compressed_size, int16_t* garbage_length)
 {
     dfprint("Stream length: %u\n", stream_length);
 
