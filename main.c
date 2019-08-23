@@ -87,14 +87,21 @@ int main(int argc, char * argv[])
         dfprint("\n\n"); }
 
     // Em novo buffer, taca material compactado
-    char packing_buffer[buffer_length];
-    // Limpa buffer com '\0' pra usarmos operaçoes de srting.
-    for (int l=0; l < buffer_length; l++) packing_buffer[l] = '\0';
+    unsigned char* packing_buffer;
+    // Tamanho em bytes dos dados compactados
+    unsigned long packed_length;
     // Armazena quantos bits de lixo ficou no ultimo byte
-    char last_byte_garbage = 0;
+    char last_byte_garbage;
 
     // Comprime buffer para dentro de packing_buffer e armazena o tamanho final do stream de bytes.
-    unsigned long packing_buffer_stream_length = compress_byte_stream(buffer, packing_buffer, buffer_length, byte_table, &last_byte_garbage);
+    packing_buffer = compress_byte_stream(buffer, buffer_length, byte_table, &packed_length, &last_byte_garbage);
+
+    if (DEBUG) {
+        dfprint("\nTamanho compactado: %u\n", packed_length);
+        dfprint("Bits de lixo: %d\n\n", last_byte_garbage);
+        unsigned char result[packed_length + 1];
+        strcpy(result, byte_stream_into_binary_str(packing_buffer, packed_length));
+        printf(" %s\n\n", result); }
 
     return 0;
 }
