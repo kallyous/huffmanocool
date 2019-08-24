@@ -95,7 +95,40 @@ unsigned long packing_routine()
 
 unsigned long unpacking_routine()
 {
-    return 0;
+    // TODO: Levar validação de nome para outro lugar
+    char file_extension[6];
+    int i = 0;
+    for (int q = strlen(FILE_NAME_STR)-5; q < strlen(FILE_NAME_STR); q++)
+        file_extension[i++] = FILE_NAME_STR[q];
+    file_extension[6] = '\0';
+    dfprint("\nExtensão do arquivo de entrada: %s\n", file_extension);
+    if (strcmp(file_extension, ".huff") != 0) {
+        printf("ERRO: O arquivo %s não apresenta extensão '.huff'\n", FILE_NAME_STR);
+        return 0; }
+
+    // Elimina o ".huff" do final do nome
+    FILE_NAME_STR[strlen(FILE_NAME_STR)-5] = '\0';
+    // Adiciona .des no final, pra diferenciar do arquivo de entrada
+    sprintf(FILE_NAME_STR, "%s.des", FILE_NAME_STR);
+    printf("Arquivo de saída: %s\n", FILE_NAME_STR);
+    //------------------------------------------------
+
+
+    // Carrega arquivo a descompactar no buffer (e seu tamanho em buffer_length)
+    char * buffer;
+    unsigned long buffer_length;
+    buffer = load_file_into_buffer(FILE_NAME_STR, &buffer_length);
+
+    // Tamanho inicial do arquivo
+    printf("Lidos %lu bytes\n", buffer_length);
+
+    // TODO: Ler cabeçalho
+
+    // TODO: Gerar árvore
+
+    // TODO: A partir do primeiro byte após a string da árvore, ler bit a bit e navegar a arvore, descompactando
+
+    return 0; // TODO: Retornar tamanho do arquivo descompactado
 }
 
 

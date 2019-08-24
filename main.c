@@ -31,11 +31,11 @@ int main(int argc, char * argv[])
     // Verifica opção escolhida pelo usuário e chama rotina adequada
     if (OPERATION == 'P') {
         dfprint("Rotina de compactação escolhida.\n");
-        printf("Compactadno %s...\n", FILE_NAME_STR);
+        printf("Compactadno %s ...\n", FILE_NAME_STR);
         final_length = packing_routine(); }
     else if (OPERATION == 'U') {
         dfprint("Rotina de descompactação escolhida.\n");
-        printf("Descompactadno %s...\n", FILE_NAME_STR);
+        printf("Descompactadno %s ...\n", FILE_NAME_STR);
         final_length = unpacking_routine(); }
     else {
         dfprint("Rotina não definida, encerrando...\n");
