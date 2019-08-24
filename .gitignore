@@ -61,3 +61,4 @@ exemplos/bin/
 bin/
 cRef
 proto*
+*.huff

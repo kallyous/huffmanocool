@@ -9,43 +9,46 @@
 
 
 
-extern unsigned int FILE_NAME_SIZE;
 extern char * FILE_NAME_STR;
+extern char OPERATION;
 
 
 
 bool parse_arguments(int argc, char * argv[])
 {
-    FILE_NAME_SIZE = 0;
 
+    // Deteca flag de DEBUG nos argumentos recebidos
     load_debug_setting(argc, argv);
 
     if (argc < 2) {
-        printf("Argumentos insuficientes fornecidos\n");
-        printf("Usar: huffmanocool --file-path caminho_do_arquivo\n");
-        return false;
-    }
+        printf("Huffman O'Cool XVIII - Usos\n");
+        printf("huffmanocool --pack input/file/path.txt\n");
+        printf("huffmanocool --unpack input/file/path.txt.huff\n");
+        printf("huffmanocool -p input/file/path.txt\n");
+        printf("huffmanocool -u input/file/path.txt.huff\n");
+        return false; }
 
     for (int i=0; i < argc; i++)
     {
-        dfprint("Parsing '%s'\n", argv[i]);
-        if (strcmp(argv[i], "--file-path") == 0) {
-            if (i == argc-1) {
-                printf("Faltando caminho do arquivo após argumento --file-path\n");
-                return false;
-            }
-            FILE_NAME_SIZE = strlen(argv[i+1]);
-            FILE_NAME_STR = (char*)malloc((FILE_NAME_SIZE * sizeof(char))+1);
+        dfprint("Analizando argumento: '%s'\n", argv[i]);
+        if (strcmp(argv[i], "--pack")==0 || strcmp(argv[i], "-p")==0) {
+            if (argc < i+1) {
+                printf("Faltando caminho do arquivo após argumento --pack\n");
+                return false; }
+            FILE_NAME_STR = (char*)malloc((strlen(argv[i+1]) * sizeof(char))+1);
             strcpy(FILE_NAME_STR, argv[i+1]);
-            dfprint("Input file name: '%s'\n", FILE_NAME_STR);
+            OPERATION = 'P'; // --pack
+            dfprint("A compactar arquivo: '%s'\n", FILE_NAME_STR);
         }
-    }
-
-    if (FILE_NAME_SIZE == 0)
-    {
-        printf("Caminho do arquivo não informado.\n");
-        printf("Usar: huffmanocool --file-path caminho_do_arquivo\n");
-        return false;
+        else if (strcmp(argv[i], "--unpack")==0 || strcmp(argv[i], "-u")==0) {
+            if (argc < i+1) {
+                printf("Faltando caminho do arquivo após argumento --unpack\n");
+                return false; }
+            FILE_NAME_STR = (char*)malloc((strlen(argv[i+1]) * sizeof(char))+1);
+            strcpy(FILE_NAME_STR, argv[i+1]);
+            OPERATION = 'U'; // --unpack
+            dfprint("A descompactar arquivo: '%s'\n", FILE_NAME_STR);
+        }
     }
 
     dfprint("Arguments parsed.\n");

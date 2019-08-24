@@ -8,11 +8,12 @@
 
 
 // argdefs.h
-unsigned int FILE_NAME_SIZE;
 char * FILE_NAME_STR;
+char OPERATION; // '--pack' ou '--unpack'
 
 // stdoutdebug.h
 bool DEBUG;
+
 
 
 

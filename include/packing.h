@@ -2,6 +2,20 @@
 #define HUFFMANOCOOL_PACKING_H
 
 
+/*  Reune as operações de compactação de arquivo.
+ *
+ *  O: a definir
+ */
+unsigned long packing_routine();
+
+
+
+/*  Reune as operações de descompactação de arquivo.
+ *
+ */
+unsigned long unpacking_routine();
+
+
 
 /* Comprime dados usando arvore gerada previamente
  *
