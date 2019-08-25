@@ -240,3 +240,37 @@ void build_tree_preorder_array(HufNode* node, char* buffer)
 
 
 
+HufNode* rebuild_tree_from_str(const char* string, int* curr_index, int tree_length)
+{
+    // Retorna ao percorrer toda string
+    if (*curr_index == tree_length) return NULL;
+
+    // Pega byte atual
+    unsigned char byte = string[*curr_index];
+
+    // Prepara nó/folha
+    HufNode* new_node = EmptyHufNode();
+
+    // Avançe curr_index para próxima iteração
+    *curr_index += 1;
+
+    // Se byte é um '\\', estamos escapando um * ou \. Pegue próximo caracter, gere o nó e retorne, pois estamos numa folha.
+    if (byte == '\\') {
+        byte = string[*curr_index];
+        new_node->byte = byte;
+        dfprint(" %c", byte);
+        *curr_index += 1; // Avançe curr_index para próxima iteração
+        return new_node; }
+
+    // Salva valor atual
+    new_node->byte = byte;
+    dfprint(" %c", byte);
+
+    // Chegamos aqui se não tivermos escapado * nem \. Agora podemos checar se byte == '*', pra definir se estamos num nó ou numa folha
+    if (byte == '*') {
+        new_node->left = rebuild_tree_from_str(string, curr_index, tree_length);
+        new_node->right = rebuild_tree_from_str(string, curr_index, tree_length); }
+
+    // Retorna nó atual
+    return new_node;
+}

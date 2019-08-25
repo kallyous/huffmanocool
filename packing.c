@@ -93,12 +93,13 @@ unsigned long packing_routine()
 }
 
 
+
 unsigned long unpacking_routine()
 {
     // TODO: Levar validação de nome para outro lugar
     char file_extension[6];
-    int i = 0;
-    for (int q = strlen(FILE_NAME_STR)-5; q < strlen(FILE_NAME_STR); q++)
+    int q, i = 0;
+    for (q = strlen(FILE_NAME_STR)-5; q < strlen(FILE_NAME_STR); q++)
         file_extension[i++] = FILE_NAME_STR[q];
     file_extension[6] = '\0';
     dfprint("\nExtensão do arquivo de entrada: %s\n", file_extension);
@@ -136,9 +137,28 @@ unsigned long unpacking_routine()
     tree_length |= buffer[1];
     dfprint("Tamanho da árvore: %d\n", tree_length);
 
-    // TODO: Gerar árvore
+    // Lê representação preordem da arvore
+    char tree_str[tree_length+1];
+    i = 0; q = 2;
+    for (; i < tree_length+1; i++)
+        tree_str[i] = buffer[q++];
+    tree_str[tree_length] = '\0';
+    dfprint("Árvore em pré-ordem:\n%s\n", tree_str);
+
+    // Recria árvore binária
+    int index = 0;
+    dfprint("Recriando árvore...\n");
+    HufNode* tree_root = rebuild_tree_from_str(tree_str, &index, tree_length);
+
+    // Teste árvore recostruindo a string pré-ordem com a árvore recriada.
+    if (DEBUG) {
+        char test_tree_str[tree_length+1];
+        for (int z=0; z < tree_length+1; z++) test_tree_str[z] = '\0';
+        build_tree_preorder_array(tree_root, test_tree_str);
+        dfprint("\nTest secundário da árvore (recria string com a árvore recosntruída):\n%s\n", test_tree_str); }
 
     // TODO: A partir do primeiro byte após a string da árvore, ler bit a bit e navegar a arvore, descompactando
+
 
     return 0; // TODO: Retornar tamanho do arquivo descompactado
 }

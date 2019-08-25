@@ -90,4 +90,8 @@ void build_tree_preorder_array(HufNode* node, char* buffer);
 
 
 
+HufNode* rebuild_tree_from_str(const char* string, int* curr_index, int tree_length);
+
+
+
 #endif //HUFFMANOCOOL_HUFFMANSTRUCTS_H
