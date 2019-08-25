@@ -158,9 +158,75 @@ unsigned long unpacking_routine()
         dfprint("\nTest secundário da árvore (recria string com a árvore recosntruída):\n%s\n", test_tree_str); }
 
     // TODO: A partir do primeiro byte após a string da árvore, ler bit a bit e navegar a arvore, descompactando
+    FILE* fptr;
+    fptr = fopen(FILE_NAME_STR, "wb");
 
+    // Marca avanço na leitura dos bytes do buffer
+    unsigned long byte_step;
 
-    return 0; // TODO: Retornar tamanho do arquivo descompactado
+    // Marca avanço na leitura dos bits
+    int bit_step;
+
+    // Vai segurar 0 ou alguma outra coisa, se o bit lido estiver definido
+    unsigned char bit_val = 0;
+
+    // Registra contagem de bytes escritos
+    unsigned long bytes_written = 0;
+
+    HufNode* curr_node = tree_root;
+
+    /* Lê, descompacta e já escreve em arquivo.
+     * Começamos a ler depois da árvore e dos dois bytes iniciais
+     * Não vamos ler o ultimo byte dentro do loop */
+    for (byte_step = tree_length + 2; byte_step < buffer_length; byte_step++)
+    {
+        // buffer_length-1 é o ultimo byte, onde pode haver bits de lixo
+        if (byte_step < buffer_length-1) {
+            for (bit_step = 7; bit_step > -1; bit_step--) // Usamos << regressivamente a cada byte
+            {
+                bit_val = buffer[byte_step] & (1U << bit_step);
+
+                if (bit_val == 0)
+                    curr_node = curr_node->left;
+                else
+                    curr_node = curr_node->right;
+
+                /* Se alcançamos uma folha, escrevemos seu byte no arquivo final, contamos +1 byte escrito
+                 * e voltamos para a raiz da árvore. */
+                if (!(curr_node->left || curr_node->right)) {
+                    fwrite(&(curr_node->byte), sizeof(char), 1, fptr);
+                    bytes_written++;
+                    curr_node = tree_root; }
+                // Caso contrário, apenas continuamos lendo os bits e bytes.
+            }
+        }
+        // No útimo byte descartamos os bits de lixo ao não iterarmos neles
+        else {
+            for (bit_step = 7; bit_step >= last_byte_garbage; bit_step--) // Usamos << regressivamente a cada byte
+            {
+                bit_val = buffer[byte_step] & (1U << bit_step);
+
+                if (bit_val == 0)
+                    curr_node = curr_node->left;
+                else
+                    curr_node = curr_node->right;
+
+                /* Se alcançamos uma folha, escrevemos seu byte no arquivo final, contamos +1 byte escrito
+                 * e voltamos para a raiz da árvore. */
+                if (!(curr_node->left || curr_node->right)) {
+                    fwrite(&(curr_node->byte), sizeof(char), 1, fptr);
+                    bytes_written++;
+                    curr_node = tree_root; }
+                // Caso contrário, apenas continuamos lendo os bits e bytes.
+            }
+        }
+    }
+
+    // Completo
+    fclose(fptr);
+
+    // Retornamos a quantidade de bytes escritos
+    return bytes_written;
 }
 
 
@@ -257,6 +323,6 @@ unsigned char* compress_byte_stream(const char* stream, unsigned long stream_len
     dfprint("compress_byte_stream()::Resultado\n");
     dfprint("%s\n", byte_stream_into_binary_str(buffer, *compressed_size));
 
-    // Terminado. Retorne a quantidade de bytes em uso por buffer
+    // Terminado
     return buffer;
 }

@@ -62,3 +62,4 @@ bin/
 cRef
 proto*
 *.huff
+*.des
