@@ -105,24 +105,36 @@ unsigned long unpacking_routine()
     if (strcmp(file_extension, ".huff") != 0) {
         printf("ERRO: O arquivo %s não apresenta extensão '.huff'\n", FILE_NAME_STR);
         return 0; }
-
-    // Elimina o ".huff" do final do nome
-    FILE_NAME_STR[strlen(FILE_NAME_STR)-5] = '\0';
-    // Adiciona .des no final, pra diferenciar do arquivo de entrada
-    sprintf(FILE_NAME_STR, "%s.des", FILE_NAME_STR);
-    printf("Arquivo de saída: %s\n", FILE_NAME_STR);
     //------------------------------------------------
-
 
     // Carrega arquivo a descompactar no buffer (e seu tamanho em buffer_length)
     char * buffer;
     unsigned long buffer_length;
     buffer = load_file_into_buffer(FILE_NAME_STR, &buffer_length);
 
+    // Elimina o ".huff" do final do nome
+    FILE_NAME_STR[strlen(FILE_NAME_STR)-5] = '\0';
+    // Adiciona .des no final, pra diferenciar do arquivo de entrada
+    sprintf(FILE_NAME_STR, "%s.des", FILE_NAME_STR);
+    printf("Arquivo de saída: %s\n", FILE_NAME_STR);
+
     // Tamanho inicial do arquivo
     printf("Lidos %lu bytes\n", buffer_length);
 
-    // TODO: Ler cabeçalho
+    // Cabeçalho: Pega os três bits que informam o lixo do último byte
+    unsigned char last_byte_garbage = 0;
+    last_byte_garbage = buffer[0] & 1U << 7;    // 00000001 << 7 == 10000000
+    last_byte_garbage |= buffer[0] & 1U << 6;   // 00000001 << 6 == 01000000
+    last_byte_garbage |= buffer[0] & 1U << 5;   // 00000001 << 5 == 00100000
+    last_byte_garbage = 5 >> last_byte_garbage; // 5 >> 11100000 == 00000111
+    dfprint("Bits lixo no ultimo byte: %d\n", last_byte_garbage);
+
+    // Cabeçalho: Pega os 13 bits que informam o tamanho da arvore.
+    unsigned char byte = buffer[0] << 3;
+    unsigned int tree_length = byte;
+    tree_length = tree_length << 5;
+    tree_length |= buffer[1];
+    dfprint("Tamanho da árvore: %d\n", tree_length);
 
     // TODO: Gerar árvore
 

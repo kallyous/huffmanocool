@@ -19,8 +19,7 @@ char* load_file_into_buffer(char * file_path, unsigned long * buffer_length)
     fptr = fopen(file_path , "r");
     if (fptr == NULL) {
         dfprint("Arquivo '%s' não existe.\n", file_path);
-        return NULL;
-    }
+        return NULL; }
 
     // Obtem tamanho do arquivo
     fseek(fptr, 0, SEEK_END);
