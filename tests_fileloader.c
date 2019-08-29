@@ -8,10 +8,10 @@
 
 Test(fileloader, load_file_into_buffer__bad_file_path)
 {
-    unsigned char * buffer;
+    byte * buffer;
     unsigned long buffer_length;
 
-    char file_path[128];
+    byte file_path[128];
     strcpy(file_path, "nothing/to/see/here");
 
     bool result = load_file_into_buffer(file_path, buffer, &buffer_length);
@@ -21,13 +21,13 @@ Test(fileloader, load_file_into_buffer__bad_file_path)
 
 Test(fileloader, load_file_into_buffer__arguments_corrent)
 {
-    unsigned char * buffer;
+    byte * buffer;
     unsigned long buffer_length;
 
-    char file_path[128];
+    byte file_path[128];
     strcpy(file_path, "assets/girl-heavy-armor.jpg");
 
-    char msg[128];
+    byte msg[128];
     snprintf(msg, sizeof(msg), "Load test file at %s", file_path);
 
     bool result = load_file_into_buffer(file_path, buffer, &buffer_length);

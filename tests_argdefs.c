@@ -10,7 +10,7 @@ Test(argdefs, parse_arguments__too_few_arguments)
 {
     int argc = 1;
     int size_str = 64;
-    char ** argv = calloc(argc, sizeof(char*));
+    byte ** argv = calloc(argc, sizeof(byte*));
     for (int i=0; i < argc; i++) argv[i] = malloc(size_str);
     strcpy(argv[0], "bin/huffmanocool");
 
@@ -24,7 +24,7 @@ Test(argdefs, parse_arguments__bad_arguments)
 {
     int argc = 3;
     int size_str = 64;
-    char ** argv = calloc(argc, sizeof(char*));
+    byte ** argv = calloc(argc, sizeof(byte*));
     for (int i=0; i < argc; i++) argv[i] = malloc(size_str);
     strcpy(argv[0], "bin/huffmanocool");
     strcpy(argv[1], "--nope");
@@ -40,7 +40,7 @@ Test(argdefs, parse_arguments__broken_arguments)
 {
     int argc = 2;
     int size_str = 64;
-    char ** argv = calloc(argc, sizeof(char*));
+    byte ** argv = calloc(argc, sizeof(byte*));
     for (int i=0; i < argc; i++) argv[i] = malloc(size_str);
     strcpy(argv[0], "bin/huffmanocool");
     strcpy(argv[1], "--file-path");
@@ -55,7 +55,7 @@ Test(argdefs, parse_arguments__good_arguments)
 {
     int argc = 3;
     int size_str = 64;
-    char ** argv = calloc(argc, sizeof(char*));
+    byte ** argv = calloc(argc, sizeof(byte*));
     for (int i=0; i < argc; i++) argv[i] = malloc(size_str);
     strcpy(argv[0], "bin/huffmanocool");
     strcpy(argv[1], "--file-path");

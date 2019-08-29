@@ -4,12 +4,14 @@
 
 
 #include <stdbool.h>
+#include "globals.h"
 
 
+typedef unsigned char byte;
 
 // argdefs.h
-char * FILE_NAME_STR;
-char OPERATION; // '--pack' ou '--unpack'
+byte * FILE_NAME_STR;
+byte OPERATION; // '--pack' ou '--unpack'
 
 // stdoutdebug.h
 bool DEBUG;

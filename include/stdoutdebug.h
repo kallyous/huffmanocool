@@ -2,12 +2,15 @@
 #define HUFFMANOCOOL_STDOUTDEBUG_H
 
 
-
-void dfprint(const char * format, ...);
-
+#include "globals.h"
 
 
-void load_debug_setting(int argc, char * argv[]);
+
+void dfprint(const byte * format, ...);
+
+
+
+void load_debug_setting(int argc, byte * argv[]);
 
 
 

@@ -8,14 +8,14 @@
 #include "include/stdoutdebug.h"
 #include "include/fileloader.h"
 #include "include/huffmanstructs.h"
-#include "include/chartable.h"
+#include "include/bytetable.h"
 
 
 
 unsigned long packing_routine()
 {
     // Carrega arquivo a compactar no buffer (e seu tamanho em buffer_length)
-    char * buffer;
+    byte * buffer;
     unsigned long buffer_length;
     buffer = load_file_into_buffer(FILE_NAME_STR, &buffer_length);
 
@@ -23,7 +23,7 @@ unsigned long packing_routine()
     printf("Lidos %lu bytes\n", buffer_length);
 
     // Prepara nome de saida do arquivo compactado
-    char output[strlen(FILE_NAME_STR) + 6];
+    byte output[strlen(FILE_NAME_STR) + 6];
     sprintf(output, "%s.huff", FILE_NAME_STR);
 
     // Gera lista encadeada de frequencia de ocorrencia dos bytes
@@ -34,7 +34,7 @@ unsigned long packing_routine()
 
     // Prepara pra montar a string representando a arvore em pre-ordem
     int tree_str_max_legth = 515;// Espaço mais que sufuciente para armazenar os bytes da arvore em string
-    char tree_str[tree_str_max_legth];
+    byte tree_str[tree_str_max_legth];
     for (int j=0; j < tree_str_max_legth; j++) tree_str[j] = '\0'; // Limpa região
 
     // Constroi stream em pre-ordem que descreve a arvore
@@ -45,11 +45,11 @@ unsigned long packing_routine()
     dfprint("Arvore na notaçao pre-ordem (tamanho %d):\n%s\n\n", tree_str_curr_length, tree_str);
 
     // Preara tabela descritiva dos bytes e suas versões compactadas
-    char** byte_table = prepare_packing_table();
+    byte** byte_table = prepare_packing_table();
 
     // Constroi tabela de bytes compactados
     dfprint("Construindo tabela de bytes compactados...\n\n");
-    char code[9]; // String temporaria para o processo de empacotamento
+    byte code[9]; // String temporaria para o processo de empacotamento
     strcpy(code, ""); // Começa vazia
     // Viaja pela arvore construindo a tabela de compressao
     build_packing_table(tree_root, byte_table, code);
@@ -62,7 +62,7 @@ unsigned long packing_routine()
         dfprint("\n\n"); }
 
     // Novo buffer pra receber material compactado
-    unsigned char* packing_buffer;
+    byte* packing_buffer;
     // Armazena tamanho do buffer depois de compactado
     unsigned long packed_length;
     // Armazena quantos bits de lixo ficou no ultimo byte
@@ -75,11 +75,11 @@ unsigned long packing_routine()
     if (DEBUG) {
         dfprint("Tamanho compactado: %u\n", packed_length);
         dfprint("Bits de lixo: %d\n", last_byte_garbage);
-        unsigned char result[packed_length + 1];
+        byte result[packed_length + 1];
         strcpy(result, byte_stream_into_binary_str(packing_buffer, packed_length));
         printf(" %s\n\n", result); }
 
-    char* header = build_header(last_byte_garbage, tree_str);
+    byte* header = build_header(last_byte_garbage, tree_str);
 
     // Escreve arquivo
     FILE* fptr;
@@ -97,7 +97,7 @@ unsigned long packing_routine()
 unsigned long unpacking_routine()
 {
     // TODO: Levar validação de nome para outro lugar
-    char file_extension[6];
+    byte file_extension[6];
     int q, i = 0;
     for (q = strlen(FILE_NAME_STR)-5; q < strlen(FILE_NAME_STR); q++)
         file_extension[i++] = FILE_NAME_STR[q];
@@ -109,7 +109,7 @@ unsigned long unpacking_routine()
     //------------------------------------------------
 
     // Carrega arquivo a descompactar no buffer (e seu tamanho em buffer_length)
-    char * buffer;
+    byte * buffer;
     unsigned long buffer_length;
     buffer = load_file_into_buffer(FILE_NAME_STR, &buffer_length);
 
@@ -123,7 +123,7 @@ unsigned long unpacking_routine()
     printf("Lidos %lu bytes\n", buffer_length);
 
     // Cabeçalho: Pega os três bits que informam o lixo do último byte
-    unsigned char last_byte_garbage = 0;
+    byte last_byte_garbage = 0;
     last_byte_garbage = buffer[0] & 1U << 7;    // 00000001 << 7 == 10000000
     last_byte_garbage |= buffer[0] & 1U << 6;   // 00000001 << 6 == 01000000
     last_byte_garbage |= buffer[0] & 1U << 5;   // 00000001 << 5 == 00100000
@@ -131,14 +131,14 @@ unsigned long unpacking_routine()
     dfprint("Bits lixo no ultimo byte: %d\n", last_byte_garbage);
 
     // Cabeçalho: Pega os 13 bits que informam o tamanho da arvore.
-    unsigned char one_byte = buffer[0] << 3;
+    byte one_byte = buffer[0] << 3;
     unsigned int tree_length = one_byte;
     tree_length = tree_length << 5;
     tree_length |= buffer[1];
     dfprint("Tamanho da árvore: %d\n", tree_length);
 
     // Lê representação preordem da arvore
-    char tree_str[tree_length+1];
+    byte tree_str[tree_length+1];
     i = 0; q = 2;
     for (; i < tree_length+1; i++)
         tree_str[i] = buffer[q++];
@@ -152,7 +152,7 @@ unsigned long unpacking_routine()
 
     // Teste árvore recostruindo a string pré-ordem com a árvore recriada.
     if (DEBUG) {
-        char test_tree_str[tree_length+1];
+        byte test_tree_str[tree_length+1];
         for (int z=0; z < tree_length+1; z++) test_tree_str[z] = '\0';
         build_tree_preorder_array(tree_root, test_tree_str);
         dfprint("\nTest secundário da árvore (recria string com a árvore recosntruída):\n%s\n", test_tree_str); }
@@ -168,7 +168,7 @@ unsigned long unpacking_routine()
     int bit_step;
 
     // Vai segurar 0 ou alguma outra coisa, se o bit lido estiver definido
-    unsigned char bit_val = 0;
+    byte bit_val = 0;
 
     // Registra contagem de bytes escritos
     unsigned long bytes_written = 0;
@@ -194,7 +194,7 @@ unsigned long unpacking_routine()
                 /* Se alcançamos uma folha, escrevemos seu one_byte no arquivo final, contamos +1 one_byte escrito
                  * e voltamos para a raiz da árvore. */
                 if (!(curr_node->left || curr_node->right)) {
-                    fwrite(&(curr_node->one_byte), sizeof(char), 1, fptr);
+                    fwrite(&(curr_node->one_byte), sizeof(byte), 1, fptr);
                     bytes_written++;
                     curr_node = tree_root; }
                 // Caso contrário, apenas continuamos lendo os bits e bytes.
@@ -214,7 +214,7 @@ unsigned long unpacking_routine()
                 /* Se alcançamos uma folha, escrevemos seu one_byte no arquivo final, contamos +1 one_byte escrito
                  * e voltamos para a raiz da árvore. */
                 if (!(curr_node->left || curr_node->right)) {
-                    fwrite(&(curr_node->one_byte), sizeof(char), 1, fptr);
+                    fwrite(&(curr_node->one_byte), sizeof(byte), 1, fptr);
                     bytes_written++;
                     curr_node = tree_root; }
                 // Caso contrário, apenas continuamos lendo os bits e bytes.
@@ -231,10 +231,10 @@ unsigned long unpacking_routine()
 
 
 
-unsigned char* build_header(unsigned int last_byte_garbage, const char* tree_str)
+byte* build_header(unsigned int last_byte_garbage, const byte* tree_str)
 {
     unsigned int tree_len = strlen(tree_str);
-    unsigned char* header = (char*)malloc(sizeof(char) * (tree_len + 2));
+    byte* header = (byte*)malloc(sizeof(byte) * (tree_len + 2));
 
     header[0] = last_byte_garbage << 5;
     header[0] |= 8 >> tree_len;
@@ -245,7 +245,7 @@ unsigned char* build_header(unsigned int last_byte_garbage, const char* tree_str
         header[i+2] = tree_str[i];
 
     if (DEBUG) {
-        char* test = byte_stream_into_binary_str(header, tree_len + 2);
+        byte* test = byte_stream_into_binary_str(header, tree_len + 2);
         dfprint("Header so far: %s\n", header); }
 
     return header;
@@ -253,14 +253,14 @@ unsigned char* build_header(unsigned int last_byte_garbage, const char* tree_str
 
 
 
-unsigned char* compress_byte_stream(const char* stream, unsigned long stream_length,
-        char* table[], unsigned long * compressed_size, int16_t* garbage_length)
+byte* compress_byte_stream(const byte* stream, unsigned long stream_length,
+        byte* table[], unsigned long * compressed_size, int16_t* garbage_length)
 {
     dfprint("compress_byte_stream()::Estado inicial\n");
     dfprint("stream_length: %u\n", stream_length);
 
     // O tamanho maximo teorico de buffer nunca sera maior que o tamanho de stream
-    unsigned char* buffer = (char*)malloc(sizeof(char) * stream_length);
+    byte* buffer = (byte*)malloc(sizeof(byte) * stream_length);
     if (!buffer) {
         dfprint("Erro na allocação de %d bytes.\n", stream_length);
         return NULL; }
@@ -275,12 +275,12 @@ unsigned char* compress_byte_stream(const char* stream, unsigned long stream_len
     unsigned long sb; // Registra o one_byte sendo lido de stream
     *compressed_size = 1; // Tamanho final do stream compactado de bytes (buffer)
 
-    char code[9]; // Segura a string de 0/1's sendo escrita durante compactaçao
+    byte code[9]; // Segura a string de 0/1's sendo escrita durante compactaçao
 
     unsigned long one_byte = 0; // Registra o one_byte sendo escrito durante compactaçao
-    unsigned char bit = 0; // Registra o bit sendo definido durante compactaçao
-    unsigned char _1 = 1; // Usado na mask pra definir bits
-    unsigned char state;
+    byte bit = 0; // Registra o bit sendo definido durante compactaçao
+    byte _1 = 1; // Usado na mask pra definir bits
+    byte state;
     int i;
 
     for (sb=0; sb < stream_length; sb++)

@@ -2,12 +2,14 @@
 #define HUFFMANOCOOL_ASSIST_H
 
 
-
-char* char_into_binary_str(char c);
-
+#include "globals.h"
 
 
-char* byte_stream_into_binary_str(char * stream, unsigned long stream_length);
+byte* byte_into_binary_str(byte c);
+
+
+
+byte* byte_stream_into_binary_str(byte * stream, unsigned long stream_length);
 
 
 

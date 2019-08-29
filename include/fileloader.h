@@ -4,13 +4,14 @@
 
 
 #include <stdbool.h>
+#include "globals.h"
 
 
-char* load_file_into_buffer(char * file_path, unsigned long * buffer_length);
+byte* load_file_into_buffer(byte * file_path, unsigned long * buffer_length);
 
 
 
-int write_from_buffer(char * file_name, char * buffer, unsigned long buffer_length);
+int write_from_buffer(byte * file_name, byte * buffer, unsigned long buffer_length);
 
 
 

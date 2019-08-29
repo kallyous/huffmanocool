@@ -12,11 +12,11 @@
 #include "include/argdefs.h"
 #include "include/fileloader.h"
 #include "include/huffmanstructs.h"
-#include "include/chartable.h"
+#include "include/bytetable.h"
 #include "include/packing.h"
 
 
-int main(int argc, char * argv[])
+int main(int argc, byte * argv[])
 {
     // Interpreta e valida argumentos recebidos
     if (!parse_arguments(argc, argv)) return 255;

@@ -34,7 +34,7 @@ Test(load_debug_setting, no_arguments)
 {
     int _argc = 1;
     int str_size = 32;
-    char** _argv = calloc(_argc, sizeof(char*));
+    byte** _argv = calloc(_argc, sizeof(byte*));
     for (int i=0; i < _argc; i++)
     _argv[i] = malloc(str_size);
     strcpy(_argv[0], "tests_stdoutdebug");
@@ -51,7 +51,7 @@ Test(load_debug_setting, unrelated_arguments)
 {
     int _argc = 2;
     int str_size = 32;
-    char** _argv = calloc(_argc, sizeof(char*));
+    byte** _argv = calloc(_argc, sizeof(byte*));
     for (int i=0; i < _argc; i++)
         _argv[i] = malloc(str_size);
     strcpy(_argv[0], "tests_stdoutdebug");
@@ -69,7 +69,7 @@ Test(load_debug_setting, defining_argument)
 {
     int _argc = 3;
     int str_size = 32;
-    char** _argv = calloc(_argc, sizeof(char*));
+    byte** _argv = calloc(_argc, sizeof(byte*));
     for (int i=0; i < _argc; i++)
     _argv[i] = malloc(str_size);
     strcpy(_argv[0], "tests_stdoutdebug");

@@ -2,6 +2,9 @@
 #define HUFFMANOCOOL_PACKING_H
 
 
+#include "globals.h"
+
+
 /*  Reune as operações de compactação de arquivo.
  *
  *  O: a definir
@@ -26,7 +29,7 @@ unsigned long unpacking_routine();
  *
  *  Obs: Ao terminar, garbage_length tera quantos bits de lixo o ultimo one_byte possui.
  */
-unsigned char* compress_byte_stream(const char* stream, unsigned long stream_length, char* table[], unsigned long * compressed_size, int16_t* garbage_length);
+byte* compress_byte_stream(const byte* stream, unsigned long stream_length, byte* table[], unsigned long * compressed_size, int16_t* garbage_length);
 
 
 /*  Constroi o cabeçalho do arquivo compactado
@@ -35,7 +38,7 @@ unsigned char* compress_byte_stream(const char* stream, unsigned long stream_len
  *
  *  O: Cadeia de bytes contendo o cabeçalho
  */
-unsigned char* build_header(unsigned int last_byte_garbage, const char* tree_str);
+byte* build_header(unsigned int last_byte_garbage, const byte* tree_str);
 
 
 

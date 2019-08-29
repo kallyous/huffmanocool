@@ -12,7 +12,7 @@ extern bool DEBUG;
 
 
 
-void dfprint(const char * format, ...)
+void dfprint(const byte * format, ...)
 {
     if (DEBUG) {
         va_list arglist; // Declara variavel do tipo va_list
@@ -24,7 +24,7 @@ void dfprint(const char * format, ...)
 
 
 
-void load_debug_setting(int argc, char * argv[])
+void load_debug_setting(int argc, byte * argv[])
 {
     DEBUG = false;
     if (argc > 1) {

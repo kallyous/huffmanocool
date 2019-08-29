@@ -1,16 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "include/globals.h"
 #include "include/assist.h"
 #include "include/stdoutdebug.h"
 
 
 
-char* char_into_binary_str(char c)
+byte* byte_into_binary_str(byte c)
 {
-    char* rep;
+    byte* rep;
     // Pra retornar o ponteiro sem perder o conteudo, usamos alocaçao de memoria ao inves de uma array simples
-    rep = (char*)malloc(sizeof(char) * 9);
+    rep = (byte*)malloc(sizeof(byte) * 9);
 
     // Hack pra suprimir warning no compilador sobre formataçao de string vazia
     sprintf(rep, "%s", "");
@@ -26,19 +27,19 @@ char* char_into_binary_str(char c)
 
 
 
-char* byte_stream_into_binary_str(char * stream, unsigned long stream_length)
+byte* byte_stream_into_binary_str(byte * stream, unsigned long stream_length)
 {
-    char* binary_str;
+    byte* binary_str;
 
     // Pra retornar o ponteiro sem perder o conteudo
-    binary_str = (char*)malloc((sizeof(char) * stream_length * 8)+1);
+    binary_str = (byte*)malloc((sizeof(byte) * stream_length * 8)+1);
 
     // Hack pra suprimir warning no compilador sobre formataçao de string vazia
     sprintf(binary_str, "%s", "");
 
     int bit;
     for (int i=0; i < stream_length; i++){
-        dfprint("%s ", char_into_binary_str(stream[i]));
+        dfprint("%s ", byte_into_binary_str(stream[i]));
     }
 
     dfprint("\n");

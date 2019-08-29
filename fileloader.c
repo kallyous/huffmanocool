@@ -9,12 +9,12 @@
 
 
 
-char* load_file_into_buffer(char * file_path, unsigned long * buffer_length)
+byte* load_file_into_buffer(byte * file_path, unsigned long * buffer_length)
 {
     FILE * fptr;
     size_t result;
     int temp_length;
-    char * buffer;
+    byte * buffer;
 
     fptr = fopen(file_path , "r");
     if (fptr == NULL) {
@@ -27,7 +27,7 @@ char* load_file_into_buffer(char * file_path, unsigned long * buffer_length)
     rewind(fptr);
 
     // Alloca memória para conter arquivo
-    buffer = (char*)malloc(sizeof(char) * temp_length);
+    buffer = (byte*)malloc(sizeof(byte) * temp_length);
     if (!buffer) {
         dfprint("Erro na allocação de %d bytes.\n", temp_length);
         return NULL;
@@ -50,7 +50,7 @@ char* load_file_into_buffer(char * file_path, unsigned long * buffer_length)
 
 
 
-int write_from_buffer(char * file_name, char * buffer, unsigned long buffer_length)
+int write_from_buffer(byte * file_name, byte * buffer, unsigned long buffer_length)
 {
     FILE * fptr;
 

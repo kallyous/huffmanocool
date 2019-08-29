@@ -9,12 +9,12 @@
 
 
 
-extern char * FILE_NAME_STR;
-extern char OPERATION;
+extern byte * FILE_NAME_STR;
+extern byte OPERATION;
 
 
 
-bool parse_arguments(int argc, char * argv[])
+bool parse_arguments(int argc, byte * argv[])
 {
 
     // Deteca flag de DEBUG nos argumentos recebidos
@@ -35,7 +35,7 @@ bool parse_arguments(int argc, char * argv[])
             if (argc < i+1) {
                 printf("Faltando caminho do arquivo após argumento --pack\n");
                 return false; }
-            FILE_NAME_STR = (char*)malloc((strlen(argv[i+1]) * sizeof(char))+1);
+            FILE_NAME_STR = (byte*)malloc((strlen(argv[i+1]) * sizeof(byte))+1);
             strcpy(FILE_NAME_STR, argv[i+1]);
             OPERATION = 'P'; // --pack
             dfprint("A compactar arquivo: '%s'\n", FILE_NAME_STR);
@@ -44,7 +44,7 @@ bool parse_arguments(int argc, char * argv[])
             if (argc < i+1) {
                 printf("Faltando caminho do arquivo após argumento --unpack\n");
                 return false; }
-            FILE_NAME_STR = (char*)malloc((strlen(argv[i+1]) * sizeof(char))+1);
+            FILE_NAME_STR = (byte*)malloc((strlen(argv[i+1]) * sizeof(byte))+1);
             strcpy(FILE_NAME_STR, argv[i+1]);
             OPERATION = 'U'; // --unpack
             dfprint("A descompactar arquivo: '%s'\n", FILE_NAME_STR);

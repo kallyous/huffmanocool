@@ -22,7 +22,7 @@ HufNode *EmptyHufNode()
 
 
 
-HufNode * FillHufNode(char value, unsigned long frequency)
+HufNode * FillHufNode(byte value, unsigned long frequency)
 {
     HufNode * n = EmptyHufNode();
     n->one_byte = value;
@@ -41,10 +41,10 @@ HufNode* link_ordered_array(HufNode * node_arr[], int length)
 
     HufNode* head = node_arr[i];
 
-    char * word;
+    byte * word;
     for (; i < length-1; i++) {
         node_arr[i]->next = node_arr[i+1]; // Conecta elo aa cadeia
-        word = char_into_binary_str( (char)node_arr[i]->one_byte );
+        word = byte_into_binary_str( (byte)node_arr[i]->one_byte );
         dfprint(" %s : %d\n", word, node_arr[i]->count); }
     dfprint(" %s : %d\n\n", word, node_arr[i]->count);
 
@@ -53,16 +53,16 @@ HufNode* link_ordered_array(HufNode * node_arr[], int length)
         dfprint("Testando segmentaçao da lista encadeada...\n");
         HufNode* n = head;
         while (n->next) {
-            dfprint(" %s -> %d\n", char_into_binary_str((char)n->one_byte), n->count);
+            dfprint(" %s -> %d\n", byte_into_binary_str((byte)n->one_byte), n->count);
             n = n->next; }
-        dfprint(" %s -> %d\n\n", char_into_binary_str((char)n->one_byte), n->count); }
+        dfprint(" %s -> %d\n\n", byte_into_binary_str((byte)n->one_byte), n->count); }
 
     return head;
 }
 
 
 
-HufNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
+HufNode* gen_list_from_buffer(byte * buffer, unsigned long buffer_length)
 {
     // Mensagem de debug
     dfprint("gen_list_from_buffer() connectado!\n");
@@ -91,7 +91,7 @@ HufNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
         dfprint("\n");
         unsigned int j, l=0;
         for (i=0; i < buffer_length; i++) {
-            dfprint(" %s", char_into_binary_str(buffer[i]));
+            dfprint(" %s", byte_into_binary_str(buffer[i]));
             l += 1;
             if (l == 8) {
                 l = 0;
@@ -100,17 +100,17 @@ HufNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
         dfprint("\n\n"); }
 
     // Itera buffer contando ocorrencias de cada byte
-    unsigned char b;
+    byte b;
     for (i=0; i < buffer_length; i++) {
         b = buffer[i];
         node_array[b]->count++; }
 
     // DEBUG: Exibe resultado da contagem
     if (DEBUG) {
-        char * word;
+        byte * word;
         for (i=0; i < arr_length; i++) {
             if (node_array[i]->count > 0) {
-                word = char_into_binary_str( (char)node_array[i]->one_byte );
+                word = byte_into_binary_str( (byte)node_array[i]->one_byte );
                 dfprint(" %s : %d\n", word, node_array[i]->count); } }
         dfprint("\n"); }
 
@@ -119,10 +119,10 @@ HufNode* gen_list_from_buffer(char * buffer, unsigned long buffer_length)
 
     // DEBUG: Exibe rersultado da ordenaçao
     if (DEBUG) {
-        char * word;
+        byte * word;
         for (i=0; i < arr_length; i++) {
             if (node_array[i]->count > 0) {
-                word = char_into_binary_str( (char)node_array[i]->one_byte );
+                word = byte_into_binary_str( (byte)node_array[i]->one_byte );
                 dfprint(" %s : %d\n", word, node_array[i]->count); } }
         dfprint("\n"); }
 
@@ -223,7 +223,7 @@ HufNode* build_huffman_tree(HufNode * head)
 
 
 
-void build_tree_preorder_array(HufNode* node, char* buffer)
+void build_tree_preorder_array(HufNode* node, byte* buffer)
 {
     if (!node) return;
 
@@ -240,13 +240,13 @@ void build_tree_preorder_array(HufNode* node, char* buffer)
 
 
 
-HufNode* rebuild_tree_from_str(const char* string, int* curr_index, int tree_length)
+HufNode* rebuild_tree_from_str(const byte* string, int* curr_index, int tree_length)
 {
     // Retorna ao percorrer toda string
     if (*curr_index == tree_length) return NULL;
 
     // Pega one_byte atual
-    unsigned char one_byte = string[*curr_index];
+    byte one_byte = string[*curr_index];
 
     // Prepara nó/folha
     HufNode* new_node = EmptyHufNode();
