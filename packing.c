@@ -131,8 +131,8 @@ unsigned long unpacking_routine()
     dfprint("Bits lixo no ultimo byte: %d\n", last_byte_garbage);
 
     // Cabeçalho: Pega os 13 bits que informam o tamanho da arvore.
-    unsigned char byte = buffer[0] << 3;
-    unsigned int tree_length = byte;
+    unsigned char one_byte = buffer[0] << 3;
+    unsigned int tree_length = one_byte;
     tree_length = tree_length << 5;
     tree_length |= buffer[1];
     dfprint("Tamanho da árvore: %d\n", tree_length);
@@ -157,7 +157,7 @@ unsigned long unpacking_routine()
         build_tree_preorder_array(tree_root, test_tree_str);
         dfprint("\nTest secundário da árvore (recria string com a árvore recosntruída):\n%s\n", test_tree_str); }
 
-    // TODO: A partir do primeiro byte após a string da árvore, ler bit a bit e navegar a arvore, descompactando
+    // TODO: A partir do primeiro one_byte após a string da árvore, ler bit a bit e navegar a arvore, descompactando
     FILE* fptr;
     fptr = fopen(FILE_NAME_STR, "wb");
 
@@ -177,7 +177,7 @@ unsigned long unpacking_routine()
 
     /* Lê, descompacta e já escreve em arquivo.
      * Começamos a ler depois da árvore e dos dois bytes iniciais
-     * Não vamos ler o ultimo byte dentro do loop */
+     * Não vamos ler o ultimo one_byte dentro do loop */
     for (byte_step = tree_length + 2; byte_step < buffer_length; byte_step++)
     {
         // buffer_length-1 é o ultimo byte, onde pode haver bits de lixo
@@ -191,16 +191,16 @@ unsigned long unpacking_routine()
                 else
                     curr_node = curr_node->right;
 
-                /* Se alcançamos uma folha, escrevemos seu byte no arquivo final, contamos +1 byte escrito
+                /* Se alcançamos uma folha, escrevemos seu one_byte no arquivo final, contamos +1 one_byte escrito
                  * e voltamos para a raiz da árvore. */
                 if (!(curr_node->left || curr_node->right)) {
-                    fwrite(&(curr_node->byte), sizeof(char), 1, fptr);
+                    fwrite(&(curr_node->one_byte), sizeof(char), 1, fptr);
                     bytes_written++;
                     curr_node = tree_root; }
                 // Caso contrário, apenas continuamos lendo os bits e bytes.
             }
         }
-        // No útimo byte descartamos os bits de lixo ao não iterarmos neles
+        // No útimo one_byte descartamos os bits de lixo ao não iterarmos neles
         else {
             for (bit_step = 7; bit_step >= last_byte_garbage; bit_step--) // Usamos << regressivamente a cada byte
             {
@@ -211,10 +211,10 @@ unsigned long unpacking_routine()
                 else
                     curr_node = curr_node->right;
 
-                /* Se alcançamos uma folha, escrevemos seu byte no arquivo final, contamos +1 byte escrito
+                /* Se alcançamos uma folha, escrevemos seu one_byte no arquivo final, contamos +1 one_byte escrito
                  * e voltamos para a raiz da árvore. */
                 if (!(curr_node->left || curr_node->right)) {
-                    fwrite(&(curr_node->byte), sizeof(char), 1, fptr);
+                    fwrite(&(curr_node->one_byte), sizeof(char), 1, fptr);
                     bytes_written++;
                     curr_node = tree_root; }
                 // Caso contrário, apenas continuamos lendo os bits e bytes.
@@ -272,12 +272,12 @@ unsigned char* compress_byte_stream(const char* stream, unsigned long stream_len
     dfprint("Estado inicial do buffer criado:\n");
     dfprint("%s\n", byte_stream_into_binary_str(buffer, stream_length));
 
-    unsigned long sb; // Registra o byte sendo lido de stream
+    unsigned long sb; // Registra o one_byte sendo lido de stream
     *compressed_size = 1; // Tamanho final do stream compactado de bytes (buffer)
 
     char code[9]; // Segura a string de 0/1's sendo escrita durante compactaçao
 
-    unsigned long byte = 0; // Registra o byte sendo escrito durante compactaçao
+    unsigned long one_byte = 0; // Registra o one_byte sendo escrito durante compactaçao
     unsigned char bit = 0; // Registra o bit sendo definido durante compactaçao
     unsigned char _1 = 1; // Usado na mask pra definir bits
     unsigned char state;
@@ -285,8 +285,8 @@ unsigned char* compress_byte_stream(const char* stream, unsigned long stream_len
 
     for (sb=0; sb < stream_length; sb++)
     {
-        /*  O valor do byte lido de stream[i], quando interpretado como inteiro, eh o indice em table onde esta
-         *  a string com a representaçao binaria do byte compactado. Entao apenas acessamos o indice e copiamos
+        /*  O valor do one_byte lido de stream[i], quando interpretado como inteiro, eh o indice em table onde esta
+         *  a string com a representaçao binaria do one_byte compactado. Entao apenas acessamos o indice e copiamos
          *  o conteudo (uma string de 0/1's) para dentro de code, e o analisamos caracter a caracter. */
         // Nao e necessario essa copia, fazemo-no por clareza na leitura do codigo.
         strcpy(code, table[stream[sb]]);
@@ -294,23 +294,23 @@ unsigned char* compress_byte_stream(const char* stream, unsigned long stream_len
             state = 0;
             if (code[i] == '0') {
                 state &= ~(_1 << (7 - bit));
-                buffer[byte] &= ~(_1 << (7 - bit));
+                buffer[one_byte] &= ~(_1 << (7 - bit));
             }
             else if (code[i] == '1') {
                 state |= (_1 << (7 - bit));
-                buffer[byte] |= (_1 << (7 - bit));
+                buffer[one_byte] |= (_1 << (7 - bit));
             }
 
-            // Atualiza qual byte de buffer esta sendo escrito atualmente
-            if (++bit > 7) { // Passou do ultimo bit do byte atual
-                byte++; // Avança para o proximo byte
-                bit = 0; // Primeiro bit do proximo byte sera definido no proximo ciclo
-                *compressed_size += 1; } // Mais um byte sera usado, aumentando o tamanho final em 1
+            // Atualiza qual one_byte de buffer esta sendo escrito atualmente
+            if (++bit > 7) { // Passou do ultimo bit do one_byte atual
+                one_byte++; // Avança para o proximo byte
+                bit = 0; // Primeiro bit do proximo one_byte sera definido no proximo ciclo
+                *compressed_size += 1; } // Mais um one_byte sera usado, aumentando o tamanho final em 1
         }
     }
 
 
-    // Se bit == 0, temos o ultimo byte vazio e nenhum bit de lixo
+    // Se bit == 0, temos o ultimo one_byte vazio e nenhum bit de lixo
     if (bit == 0) {
         *compressed_size -= 1;
         *garbage_length = 0; }

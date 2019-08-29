@@ -5,7 +5,7 @@
 
 typedef struct HufNode
 {
-    unsigned char byte;
+    unsigned char one_byte;
     unsigned long count;
     struct HufNode* next;
     struct HufNode* left;
@@ -24,7 +24,7 @@ HufNode * EmptyHufNode();
 
 /*  Gera nodo com valores definidos.
  *
- *  I: Byte e sua frequencia.
+ *  I: one_byte e sua frequencia.
  *
  *  O: Ponteiro para o novo nodo com valores definidos.
  *

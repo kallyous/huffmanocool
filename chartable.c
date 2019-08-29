@@ -25,7 +25,7 @@ void build_packing_table(HufNode* node, char* table[], char* code)
 {
     // Caso seja uma folha, armazene em table, no indice de seu respectivo byte, o caminho percorrido.
     if (!(node->left || node->right)) {
-        strcpy(table[node->byte], code);
+        strcpy(table[node->one_byte], code);
         return; }
 
     char next_code[9]; // String com 8 bytes pros 0/1's e o ultimo para '\0'

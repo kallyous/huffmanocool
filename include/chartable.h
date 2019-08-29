@@ -6,7 +6,7 @@
 
 
 
-/*  Monta tabela contendo associaçao entre byte -> representaçao na arvore, em binario.
+/*  Monta tabela contendo associaçao entre one_byte -> representaçao na arvore, em binario.
  *
  *  I: Raiz da arvore, tabela de strings, inicializada, do tipo char[256][9], para poder armazenar strings
  *      representando ate 8 bits (8 bytes + '\0'), string inicial contendo "0" para armazenar caminho.
