@@ -12,7 +12,7 @@
 HufNode *EmptyHufNode()
 {
     HufNode * n = (HufNode *)malloc(sizeof(HufNode));
-    n->one_byte = 0;
+    n->value = 0;
     n->count = 0;
     n->next = NULL;
     n->left = NULL;
@@ -25,7 +25,7 @@ HufNode *EmptyHufNode()
 HufNode * FillHufNode(byte value, unsigned long frequency)
 {
     HufNode * n = EmptyHufNode();
-    n->one_byte = value;
+    n->value = value;
     n->count = frequency;
     return n;
 }
@@ -44,7 +44,7 @@ HufNode* link_ordered_array(HufNode * node_arr[], int length)
     byte * word;
     for (; i < length-1; i++) {
         node_arr[i]->next = node_arr[i+1]; // Conecta elo aa cadeia
-        word = byte_into_binary_str( (byte)node_arr[i]->one_byte );
+        word = byte_into_binary_str( (byte)node_arr[i]->value );
         dfprint(" %s : %d\n", word, node_arr[i]->count); }
     dfprint(" %s : %d\n\n", word, node_arr[i]->count);
 
@@ -53,9 +53,9 @@ HufNode* link_ordered_array(HufNode * node_arr[], int length)
         dfprint("Testando segmentaçao da lista encadeada...\n");
         HufNode* n = head;
         while (n->next) {
-            dfprint(" %s -> %d\n", byte_into_binary_str((byte)n->one_byte), n->count);
+            dfprint(" %s -> %d\n", byte_into_binary_str((byte)n->value), n->count);
             n = n->next; }
-        dfprint(" %s -> %d\n\n", byte_into_binary_str((byte)n->one_byte), n->count); }
+        dfprint(" %s -> %d\n\n", byte_into_binary_str((byte)n->value), n->count); }
 
     return head;
 }
@@ -110,7 +110,7 @@ HufNode* gen_list_from_buffer(byte * buffer, unsigned long buffer_length)
         byte * word;
         for (i=0; i < arr_length; i++) {
             if (node_array[i]->count > 0) {
-                word = byte_into_binary_str( (byte)node_array[i]->one_byte );
+                word = byte_into_binary_str( (byte)node_array[i]->value );
                 dfprint(" %s : %d\n", word, node_array[i]->count); } }
         dfprint("\n"); }
 
@@ -122,7 +122,7 @@ HufNode* gen_list_from_buffer(byte * buffer, unsigned long buffer_length)
         byte * word;
         for (i=0; i < arr_length; i++) {
             if (node_array[i]->count > 0) {
-                word = byte_into_binary_str( (byte)node_array[i]->one_byte );
+                word = byte_into_binary_str( (byte)node_array[i]->value );
                 dfprint(" %s : %d\n", word, node_array[i]->count); } }
         dfprint("\n"); }
 
@@ -153,9 +153,9 @@ HufNode* build_huffman_tree(HufNode * head)
             dfprint("build_huffman_tree() :: Iteraçao %d - Estado da lista:\n", z);
             HufNode* dhead = list_head;
             while (dhead->next) {
-                dfprint(" %d - %d\n", dhead->one_byte, dhead->count);
+                dfprint(" %d - %d\n", dhead->value, dhead->count);
                 dhead = dhead->next; }
-            dfprint(" %d - %d\n", dhead->one_byte, dhead->count); // Exibe a cauda da lista
+            dfprint(" %d - %d\n", dhead->value, dhead->count); // Exibe a cauda da lista
             dfprint("\n"); }
 
         // Prepara
@@ -164,7 +164,7 @@ HufNode* build_huffman_tree(HufNode * head)
         right = list_head->next;
 
         // Calcula novo nodo
-        new->one_byte = '*';
+        new->value = '*';
         new->count = left->count + right->count;
         new->left = left;
         new->right = right;
@@ -229,10 +229,10 @@ void build_tree_preorder_array(HufNode* node, byte* buffer)
 
     // Caso seja uma folha, escapa '*' e '\', colocando um '\' na frente.
     if (!(node->left || node->right)) // Checa se eh folha
-        if (node->one_byte == '*' || node->one_byte == '\\') sprintf(buffer, "%s%c", buffer, '\\');
+        if (node->value == '*' || node->value == '\\') sprintf(buffer, "%s%c", buffer, '\\');
 
     // Adiciona one_byte atual na string
-    sprintf(buffer, "%s%c", buffer, node->one_byte);
+    sprintf(buffer, "%s%c", buffer, node->value);
 
     build_tree_preorder_array(node->left, buffer);
     build_tree_preorder_array(node->right, buffer);
@@ -257,13 +257,13 @@ HufNode* rebuild_tree_from_str(const byte* string, int* curr_index, int tree_len
     // Se one_byte é um '\\', estamos escapando um * ou \. Pegue próximo caracter, gere o nó e retorne, pois estamos numa folha.
     if (one_byte == '\\') {
         one_byte = string[*curr_index];
-        new_node->one_byte = one_byte;
+        new_node->value = one_byte;
         dfprint(" %c", one_byte);
         *curr_index += 1; // Avançe curr_index para próxima iteração
         return new_node; }
 
     // Salva valor atual
-    new_node->one_byte = one_byte;
+    new_node->value = one_byte;
     dfprint(" %c", one_byte);
 
     // Chegamos aqui se não tivermos escapado * nem \. Agora podemos checar se one_byte == '*', pra definir se estamos num nó ou numa folha

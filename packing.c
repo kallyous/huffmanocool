@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 #include "include/globals.h"
 #include "include/assist.h"
@@ -53,6 +54,10 @@ unsigned long packing_routine()
     strcpy(code, ""); // Começa vazia
     // Viaja pela arvore construindo a tabela de compressao
     build_packing_table(tree_root, byte_table, code);
+
+    // Log estado da tabela
+    dump_table(byte_table, "full_table.txt");
+    if (validate_table(byte_table)) printf("Tabela não apresenta repetições.\n");
 
     // Exibe tabela
     if (DEBUG) {
@@ -123,18 +128,15 @@ unsigned long unpacking_routine()
     printf("Lidos %lu bytes\n", buffer_length);
 
     // Cabeçalho: Pega os três bits que informam o lixo do último byte
-    byte last_byte_garbage = 0;
-    last_byte_garbage = buffer[0] & 1U << 7;    // 00000001 << 7 == 10000000
-    last_byte_garbage |= buffer[0] & 1U << 6;   // 00000001 << 6 == 01000000
-    last_byte_garbage |= buffer[0] & 1U << 5;   // 00000001 << 5 == 00100000
-    last_byte_garbage = 5 >> last_byte_garbage; // 5 >> 11100000 == 00000111
+    byte last_byte_garbage = buffer[0] >> 5;
     dfprint("Bits lixo no ultimo byte: %d\n", last_byte_garbage);
 
     // Cabeçalho: Pega os 13 bits que informam o tamanho da arvore.
-    byte one_byte = buffer[0] << 3;
-    unsigned int tree_length = one_byte;
-    tree_length = tree_length << 5;
-    tree_length |= buffer[1];
+    unsigned int part_a = buffer[1];
+    unsigned int part_b = buffer[0] & 31U;
+    part_b = part_b << 8;
+    unsigned int tree_length = part_a | part_b;
+
     dfprint("Tamanho da árvore: %d\n", tree_length);
 
     // Lê representação preordem da arvore
@@ -149,15 +151,9 @@ unsigned long unpacking_routine()
     int index = 0;
     dfprint("Recriando árvore...\n");
     HufNode* tree_root = rebuild_tree_from_str(tree_str, &index, tree_length);
+    dfprint("\n");
 
-    // Teste árvore recostruindo a string pré-ordem com a árvore recriada.
-    if (DEBUG) {
-        byte test_tree_str[tree_length+1];
-        for (int z=0; z < tree_length+1; z++) test_tree_str[z] = '\0';
-        build_tree_preorder_array(tree_root, test_tree_str);
-        dfprint("\nTest secundário da árvore (recria string com a árvore recosntruída):\n%s\n", test_tree_str); }
-
-    // TODO: A partir do primeiro one_byte após a string da árvore, ler bit a bit e navegar a arvore, descompactando
+    // TODO: A partir do primeiro byte após a string da árvore, ler bit a bit e navegar a arvore, descompactando
     FILE* fptr;
     fptr = fopen(FILE_NAME_STR, "wb");
 
@@ -175,10 +171,14 @@ unsigned long unpacking_routine()
 
     HufNode* curr_node = tree_root;
 
+    int step_reg = 0;
+
+    dfprint("Descompactadno...\n");
+
     /* Lê, descompacta e já escreve em arquivo.
      * Começamos a ler depois da árvore e dos dois bytes iniciais
      * Não vamos ler o ultimo one_byte dentro do loop */
-    for (byte_step = tree_length + 2; byte_step < buffer_length; byte_step++)
+    for (byte_step = tree_length + 2U; byte_step < buffer_length; byte_step++)
     {
         // buffer_length-1 é o ultimo byte, onde pode haver bits de lixo
         if (byte_step < buffer_length-1) {
@@ -191,10 +191,18 @@ unsigned long unpacking_routine()
                 else
                     curr_node = curr_node->right;
 
+                if (!curr_node) {
+                    printf("\nErro na descompactação!\n");
+                    return 0; }
+
                 /* Se alcançamos uma folha, escrevemos seu one_byte no arquivo final, contamos +1 one_byte escrito
                  * e voltamos para a raiz da árvore. */
                 if (!(curr_node->left || curr_node->right)) {
-                    fwrite(&(curr_node->one_byte), sizeof(byte), 1, fptr);
+                    dfprint(" %u", curr_node->value);
+                    if (++step_reg == 8) {
+                        dfprint("\n");
+                        step_reg = 0; }
+                    fwrite(&(curr_node->value), sizeof(byte), 1, fptr);
                     bytes_written++;
                     curr_node = tree_root; }
                 // Caso contrário, apenas continuamos lendo os bits e bytes.
@@ -214,7 +222,7 @@ unsigned long unpacking_routine()
                 /* Se alcançamos uma folha, escrevemos seu one_byte no arquivo final, contamos +1 one_byte escrito
                  * e voltamos para a raiz da árvore. */
                 if (!(curr_node->left || curr_node->right)) {
-                    fwrite(&(curr_node->one_byte), sizeof(byte), 1, fptr);
+                    fwrite(&(curr_node->value), sizeof(byte), 1, fptr);
                     bytes_written++;
                     curr_node = tree_root; }
                 // Caso contrário, apenas continuamos lendo os bits e bytes.
@@ -236,9 +244,16 @@ byte* build_header(unsigned int last_byte_garbage, const byte* tree_str)
     unsigned int tree_len = strlen(tree_str);
     byte* header = (byte*)malloc(sizeof(byte) * (tree_len + 2));
 
-    header[0] = last_byte_garbage << 5;
-    header[0] |= 8 >> tree_len;
-    header[1] = tree_len;
+    unsigned int g = last_byte_garbage << 5;
+    unsigned int a = tree_len >> 8;
+    unsigned int b = tree_len & (UINT_MAX - 65280);
+
+    header[0] = a | g;
+    header[1] = b;
+
+//    header[0] = last_byte_garbage << 5;
+//    header[0] |= 8 >> tree_len;
+//    header[1] = tree_len;
 
     // Copia bytes relevantes de tree_str para dentro do cabeçalho
     for (int i=0; i < tree_len; i++)

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "include/assist.h"
 #include "include/globals.h"
 #include "include/bytetable.h"
 
@@ -17,6 +18,8 @@ byte** prepare_packing_table()
         table[i] = (byte*)malloc(sizeof(byte)*9);
         strcpy(table[i], ""); }
 
+    dump_table(table, "table_blank.log");
+
     return table;
 }
 
@@ -26,7 +29,7 @@ void build_packing_table(HufNode* node, byte* table[], byte* code)
 {
     // Caso seja uma folha, armazene em table, no indice de seu respectivo byte, o caminho percorrido.
     if (!(node->left || node->right)) {
-        strcpy(table[node->one_byte], code);
+        strcpy(table[node->value], code);
         return; }
 
     byte next_code[9]; // String com 8 bytes pros 0/1's e o ultimo para '\0'

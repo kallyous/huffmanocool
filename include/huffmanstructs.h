@@ -8,7 +8,7 @@
 
 typedef struct HufNode
 {
-    byte one_byte;
+    byte value;
     unsigned long count;
     struct HufNode* next;
     struct HufNode* left;
