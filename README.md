@@ -50,6 +50,12 @@ Exemplos de uso na pasta `examples`
 
 ---
 
+###Instalação do R
+
+https://www.digitalocean.com/community/tutorials/how-to-install-r-on-ubuntu-18-04-quickstart
+
+---
+
 ### Testes Unitários
 
 Como definir e rodar testes unitários para este projeto, usando o framework Criterion.
