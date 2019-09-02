@@ -50,7 +50,7 @@ Exemplos de uso na pasta `examples`
 
 ---
 
-###Instalação do R
+### Instalação do R
 
 https://www.digitalocean.com/community/tutorials/how-to-install-r-on-ubuntu-18-04-quickstart
 
