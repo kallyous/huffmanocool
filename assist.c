@@ -79,3 +79,21 @@ int validate_table(byte* table[])
             if (!dif) return 0; } }
     return 1;
 }
+
+
+
+byte* append_byte(byte* buffer, byte one_byte, unsigned long buffer_load, unsigned long buffer_length)
+{
+    if (buffer_load < buffer_length) buffer[buffer_load] = one_byte;
+    return buffer;
+}
+
+
+
+unsigned long dump_to_file(byte* file_name, byte* buffer, unsigned int buffer_length)
+{
+    FILE* fptr = fopen(file_name, "wb");
+    unsigned long ret = fwrite(buffer, sizeof(byte), buffer_length, fptr);
+    fclose(fptr);
+    return ret;
+}

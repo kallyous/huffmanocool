@@ -6,7 +6,7 @@
 #include "include/stdoutdebug.h"
 #include "include/huffmanstructs.h"
 #include "include/sort.h"
-
+#include "include/huffmanstructsdebug.h"
 
 
 HufNode *EmptyHufNode()
@@ -218,58 +218,73 @@ HufNode* build_huffman_tree(HufNode * head)
     }
 
     dfprint("build_huffman_tree() :: Sucesso na criaçao da arvore!\n");
+
+    if (DEBUG) {
+        unsigned long buffer_length = 4096;
+        unsigned long buffer_load = 0;
+        byte* buffer = (byte*)malloc(sizeof(byte)*buffer_length);
+        dump_huffnode_tree("huffman_tree_orig.log", root, 0, buffer, &buffer_load, buffer_length);
+        free(buffer);
+    }
+
     return root;
 }
 
 
 
-void build_tree_preorder_array(HufNode* node, byte* buffer)
+void build_tree_preorder_array(HufNode* node, byte* buffer, unsigned long * buffer_load, unsigned long buffer_length)
 {
+    // Condição de saída
     if (!node) return;
 
-    // Caso seja uma folha, escapa '*' e '\', colocando um '\' na frente.
-    if (!(node->left || node->right)) // Checa se eh folha
-        if (node->value == '*' || node->value == '\\') sprintf(buffer, "%s%c", buffer, '\\');
+    /*  Caso seja uma folha, escapa '*' e '\', colocando um '\' na frente.
+     *  A condição desse bloco será verdadeira sempre que estivermos numa folha, pois elas não
+     *  possuem left ou right. */
+    if (!(node->left || node->right)) {
+        if (node->value == '*' || node->value == '\\') {
+            dfprint("Folha com %c alcançada, escapando com '\\'.\n", node->value);
+            append_byte(buffer, '\\', *buffer_load, buffer_length);
+            *buffer_load += 1;
+        }
+    }
 
-    // Adiciona one_byte atual na string
-    sprintf(buffer, "%s%c", buffer, node->value);
+    // Adiciona byte atual na array de bytes
+    append_byte(buffer, node->value, *buffer_load, buffer_length);
+    *buffer_load += 1;
 
-    build_tree_preorder_array(node->left, buffer);
-    build_tree_preorder_array(node->right, buffer);
+    build_tree_preorder_array(node->left, buffer, buffer_load, buffer_length);
+    build_tree_preorder_array(node->right, buffer, buffer_load, buffer_length);
 }
 
 
 
-HufNode* rebuild_tree_from_str(const byte* string, int* curr_index, int tree_length)
+HufNode* rebuild_tree_from_byte_array(const byte* byte_array, unsigned int* curr_index, unsigned int tree_arr_length)
 {
-    // Retorna ao percorrer toda string
-    if (*curr_index == tree_length) return NULL;
-
-    // Pega one_byte atual
-    byte one_byte = string[*curr_index];
+    // Retorna ao percorrer o stream
+    if (*curr_index == tree_arr_length) return NULL;
 
     // Prepara nó/folha
     HufNode* new_node = EmptyHufNode();
 
-    // Avançe curr_index para próxima iteração
+    // Pega byte atual e depois incrementa indice atual
+    byte curr_byte = byte_array[*curr_index];
     *curr_index += 1;
 
-    // Se one_byte é um '\\', estamos escapando um * ou \. Pegue próximo caracter, gere o nó e retorne, pois estamos numa folha.
-    if (one_byte == '\\') {
-        one_byte = string[*curr_index];
-        new_node->value = one_byte;
-        dfprint(" %c", one_byte);
-        *curr_index += 1; // Avançe curr_index para próxima iteração
-        return new_node; }
+    // Se curr_byte é um '\\', estamos escapando um * ou \. Pegue próximo caracter.
+    if (curr_byte == '\\') {
+        curr_byte = byte_array[*curr_index];
+        *curr_index += 1; }
 
-    // Salva valor atual
-    new_node->value = one_byte;
-    dfprint(" %c", one_byte);
+    // Salva valor atual no nó/folha
+    new_node->value = curr_byte;
 
-    // Chegamos aqui se não tivermos escapado * nem \. Agora podemos checar se one_byte == '*', pra definir se estamos num nó ou numa folha
-    if (one_byte == '*') {
-        new_node->left = rebuild_tree_from_str(string, curr_index, tree_length);
-        new_node->right = rebuild_tree_from_str(string, curr_index, tree_length); }
+    dfprint(" %c", curr_byte);
+
+    // Veremos se estamos em nó ou folha
+    if (curr_byte == '*') {
+        new_node->left = rebuild_tree_from_byte_array(byte_array, curr_index, tree_arr_length);
+        new_node->right = rebuild_tree_from_byte_array(byte_array, curr_index, tree_arr_length);
+    }
 
     // Retorna nó atual
     return new_node;

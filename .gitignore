@@ -63,3 +63,6 @@ cRef
 proto*
 *.huff
 *.des
+*.log
+
+

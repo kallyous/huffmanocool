@@ -29,7 +29,8 @@ unsigned long unpacking_routine();
  *
  *  Obs: Ao terminar, garbage_length tera quantos bits de lixo o ultimo one_byte possui.
  */
-byte* compress_byte_stream(const byte* stream, unsigned long stream_length, byte* table[], unsigned long * compressed_size, int16_t* garbage_length);
+byte* compress_byte_stream(const byte* stream, unsigned long stream_length,
+        byte* table[], unsigned long * compressed_size, unsigned int * garbage_length);
 
 
 /*  Constroi o cabeçalho do arquivo compactado
@@ -38,7 +39,7 @@ byte* compress_byte_stream(const byte* stream, unsigned long stream_length, byte
  *
  *  O: Cadeia de bytes contendo o cabeçalho
  */
-byte* build_header(unsigned int last_byte_garbage, const byte* tree_str);
+byte* build_header(const byte* tree_byte_arr, unsigned long tree_byte_arr_length, byte last_byte_garbage);
 
 
 

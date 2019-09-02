@@ -14,4 +14,8 @@ void load_debug_setting(int argc, byte * argv[]);
 
 
 
+unsigned long dump_to_file(byte* file_name, byte* buffer, unsigned int buffer_length);
+
+
+
 #endif //HUFFMANOCOOL_STDOUTDEBUG_H

@@ -32,12 +32,12 @@ void build_packing_table(HufNode* node, byte* table[], byte* code)
         strcpy(table[node->value], code);
         return; }
 
-    byte next_code[9]; // String com 8 bytes pros 0/1's e o ultimo para '\0'
+    byte next_code[9]; // String com 8 bytes pros 0/1's e o último para '\0'
     for (int i=0; i < 9; i++) next_code[i] = '\0'; // Limpa string
 
-    sprintf(next_code, "%s0", code); // Adiciona o 0 para descer aa esquerda
+    sprintf(next_code, "%s0", code); // Adiciona o 0 para descer á esquerda
     build_packing_table(node->left, table, next_code);
 
-    sprintf(next_code, "%s1", code); // Adiciona o 1 para descer aa direita
+    sprintf(next_code, "%s1", code); // Adiciona o 1 para descer á direita
     build_packing_table(node->right, table, next_code);
 }
