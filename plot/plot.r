@@ -1,4 +1,4 @@
-setwd("/home/kallyous/Projects/HuffmanOcool/plot")
+setwd("/home/kallyous/Projetos/huffmanocool/plot")
 abb_avl <-read.table("Plot.txt",header=TRUE)
 attach(abb_avl)
 plot(VALUE,ABB,type='h',col="blue",ann = FALSE)
