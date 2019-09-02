@@ -52,7 +52,9 @@ Exemplos de uso na pasta `examples`
 
 ### Instalação do R
 
-https://www.digitalocean.com/community/tutorials/how-to-install-r-on-ubuntu-18-04-quickstart
+Tutorial para instalação do R no Ubuntu 18.04
+
+* [Tutorial de Instalação R (Digital Ocean)](https://www.digitalocean.com/community/tutorials/how-to-install-r-on-ubuntu-18-04-quickstart)
 
 ---
 
