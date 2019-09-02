@@ -58,6 +58,12 @@ Tutorial para instalação do R no Ubuntu 18.04
 
 ---
 
+### Seminário
+
+* [A*](https://drive.google.com/open?id=1R0OZVLrm47UgvnZXlyEvmv7XDWvkw2yH-eRD9NZoyL4)
+
+---
+
 ### Testes Unitários
 
 Como definir e rodar testes unitários para este projeto, usando o framework Criterion.
