@@ -4,7 +4,7 @@
 
 #include "globals.h"
 #include "assist.h"
-#include "stdoutdebug.h"
+#include "debug.h"
 
 
 byte* byte_into_binary_str(byte c)
@@ -46,24 +46,6 @@ byte* byte_stream_into_binary_str(byte * stream, unsigned long stream_length)
 }
 
 
-void dump_table(byte* table[], const byte* file_name)
-{
-    printf("\n%s\n", file_name);
-    FILE* fptr = fopen(file_name, "wb");
-    if (fptr)
-    {
-        byte line[16];
-        for (int a=0; a < 16; a++) line[a] = '\0';
-        for (int b=0; b < 256; b++)
-        {
-            sprintf(line, "%d\t%s\n", b, table[b]);
-            fputs(line, fptr);
-        }
-    }
-    fclose(fptr);
-}
-
-
 int validate_table(byte* table[])
 {
     int i;
@@ -81,13 +63,4 @@ byte* append_byte(byte* buffer, byte one_byte, unsigned long buffer_load, unsign
 {
     if (buffer_load < buffer_length) buffer[buffer_load] = one_byte;
     return buffer;
-}
-
-
-unsigned long dump_to_file(byte* file_name, byte* buffer, unsigned int buffer_length)
-{
-    FILE* fptr = fopen(file_name, "wb");
-    unsigned long ret = fwrite(buffer, sizeof(byte), buffer_length, fptr);
-    fclose(fptr);
-    return ret;
 }

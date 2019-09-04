@@ -3,10 +3,9 @@
 
 #include "globals.h"
 #include "assist.h"
-#include "stdoutdebug.h"
+#include "debug.h"
 #include "huffmanstructs.h"
 #include "sort.h"
-#include "huffmanstructsdebug.h"
 
 
 HufNode *EmptyHufNode()
@@ -209,7 +208,7 @@ HufNode* build_huffman_tree(HufNode * head)
         unsigned long buffer_length = 4096;
         unsigned long buffer_load = 0;
         byte* buffer = (byte*)malloc(sizeof(byte)*buffer_length);
-        dump_huffnode_tree("huffman_tree_orig.log", root, 0, buffer, &buffer_load, buffer_length);
+        dump_huffnode_tree("logs/huffman_tree_orig.log", root, 0, buffer, &buffer_load, buffer_length);
         free(buffer); }
 
     return root;
@@ -263,7 +262,7 @@ HufNode* rebuild_tree_from_byte_array(const byte* byte_array, unsigned int* curr
         new_node->right = rebuild_tree_from_byte_array(byte_array, curr_index, tree_arr_length);
     }
 
-    // Se curr_byte é um '\\', estamos escapando um * ou \. Pegue próximo caracter.
+    // Se curr_byte é um '\\', estamos escapando um * ou \. Pegue próximo caracter
     if (curr_byte == '\\') {
         curr_byte = byte_array[*curr_index];
         *curr_index += 1; }

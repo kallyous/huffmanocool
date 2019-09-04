@@ -6,11 +6,10 @@
 #include "globals.h"
 #include "assist.h"
 #include "packing.h"
-#include "stdoutdebug.h"
+#include "debug.h"
 #include "fileloader.h"
 #include "huffmanstructs.h"
 #include "bytetable.h"
-#include "huffmanstructsdebug.h"
 
 
 unsigned long packing_routine()
@@ -53,7 +52,7 @@ unsigned long packing_routine()
 
     // Loga o estado da tabela
     if (DEBUG) {
-        dump_table(byte_table, "full_table.log");
+        dump_table(byte_table, "logs/full_table.log");
         if (validate_table(byte_table)) printf("Tabela não apresenta repetições.\n");
         else printf("Tabela apresenta repetições de folhas (está quebrada)!\n"); }
 
@@ -138,7 +137,7 @@ unsigned long unpacking_routine()
     unsigned long temp_buffer_length = 1024;
     unsigned long temp_buffer_load = 0;
     byte temp_buffer[temp_buffer_length];
-    dump_huffnode_tree("huffman_tree_rebuilt.log", tree_root, 0, temp_buffer, &temp_buffer_load, temp_buffer_length);
+    dump_huffnode_tree("logs/huffman_tree_rebuilt.log", tree_root, 0, temp_buffer, &temp_buffer_load, temp_buffer_length);
 
     // Abre arquivo para excrever arquivo descompactado
     FILE* fptr;
@@ -275,7 +274,7 @@ byte* build_header(const byte* tree_byte_arr, unsigned long tree_byte_arr_length
     for (unsigned long i=0; i < tree_byte_arr_length; i++)
         header[i+2] = tree_byte_arr[i];
 
-    dump_to_file("header_str.log", header, tree_byte_arr_length+2);
+    dump_to_file("logs/header_str.log", header, 2, tree_byte_arr_length+2);
 
     return header;
 }

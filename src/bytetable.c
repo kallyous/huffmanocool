@@ -17,7 +17,7 @@ byte** prepare_packing_table()
         table[i] = (byte*)malloc(sizeof(byte)*9);
         strcpy(table[i], ""); }
 
-    dump_table(table, "table_blank.log");
+    dump_table(table, "logs/table_blank.log");
 
     return table;
 }

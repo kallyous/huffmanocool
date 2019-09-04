@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "globals.h"
-#include "stdoutdebug.h"
+#include "debug.h"
 #include "argdefs.h"
 
 

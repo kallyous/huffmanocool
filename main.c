@@ -8,7 +8,7 @@
 
 #include "globals.h"
 #include "assist.h"
-#include "stdoutdebug.h"
+#include "debug.h"
 #include "argdefs.h"
 #include "fileloader.h"
 #include "huffmanstructs.h"

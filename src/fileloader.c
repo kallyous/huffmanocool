@@ -4,7 +4,7 @@
 
 #include "globals.h"
 #include "assist.h"
-#include "stdoutdebug.h"
+#include "debug.h"
 #include "fileloader.h"
 
 
