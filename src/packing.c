@@ -3,14 +3,13 @@
 #include <string.h>
 #include <limits.h>
 
-#include "include/globals.h"
-#include "include/assist.h"
-#include "include/packing.h"
-#include "include/stdoutdebug.h"
-#include "include/fileloader.h"
-#include "include/huffmanstructs.h"
-#include "include/bytetable.h"
-#include "include/huffmanstructsdebug.h"
+#include "globals.h"
+#include "assist.h"
+#include "packing.h"
+#include "debug.h"
+#include "fileloader.h"
+#include "huffmanstructs.h"
+#include "bytetable.h"
 
 
 unsigned long packing_routine()
@@ -53,7 +52,7 @@ unsigned long packing_routine()
 
     // Loga o estado da tabela
     if (DEBUG) {
-        dump_table(byte_table, "full_table.log");
+        dump_table(byte_table, "logs/full_table.log");
         if (validate_table(byte_table)) printf("Tabela não apresenta repetições.\n");
         else printf("Tabela apresenta repetições de folhas (está quebrada)!\n"); }
 
@@ -81,7 +80,6 @@ unsigned long packing_routine()
     // Tamanho compactado
     return header_length + compressed_buffer_length;
 }
-
 
 
 unsigned long unpacking_routine()
@@ -118,23 +116,28 @@ unsigned long unpacking_routine()
 
     // Cabeçalho: Pega os 13 bits que informam o tamanho da arvore.
     unsigned int part_a = buffer[1];
-    unsigned int part_b = buffer[0] << 3;
-    part_b = part_b >> 3;
+    unsigned int part_b = buffer[0] & 31U;
+    part_b = part_b << 8;
     unsigned int tree_length = part_a | part_b;
 
     dfprint("Tamanho da árvore: %d\n", tree_length);
 
     // Recria árvore binária
     unsigned int tree_byte_arr_index = 2;
-    dfprint("Recriando árvore...\n");
-    HufNode* tree_root = rebuild_tree_from_byte_array(buffer, &tree_byte_arr_index, tree_length);
+    if (DEBUG) {
+        dfprint("Recriando árvore...\n");
+        for (int i=tree_byte_arr_index; i < tree_length +2; i++) dfprint("%c", buffer[i]);
+        dfprint("\n"); }
+
+    HufNode* tree_root = rebuild_tree_from_byte_array(buffer, &tree_byte_arr_index, tree_length+2); // +2 é o offset causado pelos dois bytes iniciais que informam o tamanho da árvore e a quantidade de bits de lixo
+
     dfprint("\n");
 
     // Loga árvore reconstruida
     unsigned long temp_buffer_length = 1024;
     unsigned long temp_buffer_load = 0;
     byte temp_buffer[temp_buffer_length];
-    dump_huffnode_tree("huffman_tree_rebuilt.log", tree_root, 0, temp_buffer, &temp_buffer_load, temp_buffer_length);
+    dump_huffnode_tree("logs/huffman_tree_rebuilt.log", tree_root, 0, temp_buffer, &temp_buffer_load, temp_buffer_length);
 
     // Abre arquivo para excrever arquivo descompactado
     FILE* fptr;
@@ -255,7 +258,6 @@ unsigned long unpacking_routine()
 }
 
 
-
 byte* build_header(const byte* tree_byte_arr, unsigned long tree_byte_arr_length, byte last_byte_garbage)
 {
     byte* header = (byte*)malloc(sizeof(byte) * (tree_byte_arr_length + 2));
@@ -272,11 +274,10 @@ byte* build_header(const byte* tree_byte_arr, unsigned long tree_byte_arr_length
     for (unsigned long i=0; i < tree_byte_arr_length; i++)
         header[i+2] = tree_byte_arr[i];
 
-    dump_to_file("header_str.log", header, tree_byte_arr_length+2);
+    dump_to_file("logs/header_str.log", header, 2, tree_byte_arr_length+2);
 
     return header;
 }
-
 
 
 byte* compress_byte_stream(const byte* stream, unsigned long stream_length,

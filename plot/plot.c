@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include "plot_structs.h"
 
-int comp;
+extern int comp;
 int main() {
+    comp = 0;
     ABB * binary_tree = NULL;
     AVL * balanced_tree = NULL;
     FILE *comparision;

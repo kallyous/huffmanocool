@@ -6,14 +6,14 @@
 #include <math.h>
 #include <time.h>
 
-#include "include/globals.h"
-#include "include/assist.h"
-#include "include/stdoutdebug.h"
-#include "include/argdefs.h"
-#include "include/fileloader.h"
-#include "include/huffmanstructs.h"
-#include "include/bytetable.h"
-#include "include/packing.h"
+#include "globals.h"
+#include "assist.h"
+#include "debug.h"
+#include "argdefs.h"
+#include "fileloader.h"
+#include "huffmanstructs.h"
+#include "bytetable.h"
+#include "packing.h"
 
 
 int main(int argc, byte * argv[])

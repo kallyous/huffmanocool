@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
-project(Huffmanocool)
+project(Huffmanocool C)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11")
+set(CMAKE_C_STANDARD 11)
 
-set(SOURCE_FILES main.c assist.c sort.c argdefs.c fileloader.c stdoutdebug.c huffmanstructs.c bytetable.c packing.c huffmanstructsdebug.c)
+include_directories("${PROJECT_SOURCE_DIR}/include")
+
+set(SOURCE_FILES main.c src/assist.c src/sort.c src/argdefs.c src/fileloader.c src/debug.c src/huffmanstructs.c src/bytetable.c src/packing.c)
 add_executable(huffmanocool ${SOURCE_FILES})

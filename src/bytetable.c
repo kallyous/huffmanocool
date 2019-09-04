@@ -2,10 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "include/assist.h"
-#include "include/globals.h"
-#include "include/bytetable.h"
-
+#include "assist.h"
+#include "globals.h"
+#include "bytetable.h"
 
 
 byte** prepare_packing_table()
@@ -18,11 +17,10 @@ byte** prepare_packing_table()
         table[i] = (byte*)malloc(sizeof(byte)*9);
         strcpy(table[i], ""); }
 
-    dump_table(table, "table_blank.log");
+    dump_table(table, "logs/table_blank.log");
 
     return table;
 }
-
 
 
 void build_packing_table(HufNode* node, byte* table[], byte* code)

@@ -1,5 +1,5 @@
-#ifndef HUFFMANOCOOL_byteTABLE_H
-#define HUFFMANOCOOL_byteTABLE_H
+#ifndef HUFFMANOCOOL_BYTETABLE_H
+#define HUFFMANOCOOL_BYTETABLE_H
 
 
 #include "globals.h"
@@ -24,4 +24,4 @@ byte** prepare_packing_table();
 
 
 
-#endif //HUFFMANOCOOL_byteTABLE_H
+#endif //HUFFMANOCOOL_BYTETABLE_H

@@ -1,12 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "include/globals.h"
-#include "include/assist.h"
-#include "include/stdoutdebug.h"
-#include "include/huffmanstructs.h"
-#include "include/sort.h"
-#include "include/huffmanstructsdebug.h"
+#include "globals.h"
+#include "assist.h"
+#include "debug.h"
+#include "huffmanstructs.h"
+#include "sort.h"
 
 
 HufNode *EmptyHufNode()
@@ -21,7 +20,6 @@ HufNode *EmptyHufNode()
 }
 
 
-
 HufNode * FillHufNode(byte value, unsigned long frequency)
 {
     HufNode * n = EmptyHufNode();
@@ -31,40 +29,25 @@ HufNode * FillHufNode(byte value, unsigned long frequency)
 }
 
 
-
 HufNode* link_ordered_array(HufNode * node_arr[], int length)
 {
-    dfprint("Gerando lista encadeada...\n");
-
     int i = 0;
-    while (node_arr[i]->count < 1) i++;
 
+    // Encontra quem será a cabeça da lista
+    while (node_arr[i]->count < 1) i++;
     HufNode* head = node_arr[i];
 
-    byte * word;
-    for (; i < length-1; i++) {
-        node_arr[i]->next = node_arr[i+1]; // Conecta elo aa cadeia
-        word = byte_into_binary_str( (byte)node_arr[i]->value );
-        dfprint(" %s : %d\n", word, node_arr[i]->count); }
-    dfprint(" %s : %d\n\n", word, node_arr[i]->count);
+    // Conecta elementos a partir da cabeça
+    for (; i < length-1; i++) node_arr[i]->next = node_arr[i+1];
 
-    // DEBUG: Testa conexoes da lista encadeada
-    if (DEBUG) {
-        dfprint("Testando segmentaçao da lista encadeada...\n");
-        HufNode* n = head;
-        while (n->next) {
-            dfprint(" %s -> %d\n", byte_into_binary_str((byte)n->value), n->count);
-            n = n->next; }
-        dfprint(" %s -> %d\n\n", byte_into_binary_str((byte)n->value), n->count); }
-
+    // Retorrna a cabeça, elemento de menor ocorrência
     return head;
 }
 
 
-
 HufNode* gen_list_from_buffer(byte * buffer, unsigned long buffer_length)
 {
-    // Mensagem de debug
+    // Ddebug
     dfprint("gen_list_from_buffer() connectado!\n");
 
     // Certifica tamanho do buffer
@@ -86,7 +69,7 @@ HufNode* gen_list_from_buffer(byte * buffer, unsigned long buffer_length)
     for (i=0; i < arr_length; i++) {
         node_array[i] = FillHufNode(i, 0); }
 
-    // DEBUG: Itera one_byte a one_byte pelo buffer, exibindo os bytes para testes
+    // DEBUG: Navega byte a byte pelo buffer, exibindo os bytes
     if (DEBUG) {
         dfprint("\n");
         unsigned int j, l=0;
@@ -99,7 +82,7 @@ HufNode* gen_list_from_buffer(byte * buffer, unsigned long buffer_length)
         }
         dfprint("\n\n"); }
 
-    // Itera buffer contando ocorrencias de cada byte
+    // Navega buffer contando ocorrencias de cada byte
     byte b;
     for (i=0; i < buffer_length; i++) {
         b = buffer[i];
@@ -114,7 +97,7 @@ HufNode* gen_list_from_buffer(byte * buffer, unsigned long buffer_length)
                 dfprint(" %s : %d\n", word, node_array[i]->count); } }
         dfprint("\n"); }
 
-    // Ordena array
+    // Ordena array (pra uma array de 256 elementos, tanto faz o algorítmo usado)
     bubble_sort(node_array, arr_length);
 
     // DEBUG: Exibe rersultado da ordenaçao
@@ -133,10 +116,9 @@ HufNode* gen_list_from_buffer(byte * buffer, unsigned long buffer_length)
 }
 
 
-
 HufNode* build_huffman_tree(HufNode * head)
 {
-    int z = 0;
+    int z = 0; // Variável para debug
 
     HufNode* root;
     HufNode* list_head;
@@ -177,59 +159,60 @@ HufNode* build_huffman_tree(HufNode * head)
         // Navega lista buscando posiçao onde inserir new
         HufNode* next_node = right->next;
         while (new->count > next_node->count)
-        {   /*  Loop atual ecerra ao alcançar uma dentre estas tres possibilidades:
+        {
+            /*  Loop atual ecerra ao alcançar uma dentre estas tres possibilidades:
              *
-           #1-> !next_node->next implica que new->count eh o maior de todos.
-             *      Devemos posicionar new no final da lista, aa direita de next_node
+           #1*  !next_node->next implica que new->count eh o maior de todos.
+             *      Devemos posicionar new no final da lista, á direita de next_node
              *
              *  !(new->count > next_node->count) implica as outras duas possibilidades:
-           #2->     new->count < next_node->count
-             *          Devemos posicionar new aa esquerda de next_node
+           #2*     new->count < next_node->count
+             *          Devemos posicionar new á esquerda de next_node
              *
-           #3->     new->count == next_node->count
-             *          Devemos posicionar new aa esquerda de next_node
-             */
+           #3*     new->count == next_node->count
+             *          Devemos posicionar new á esquerda de next_node */
 
             // Navega adiante
             if (next_node->next) {
-                prev_node = next_node; // Lembra o nodo imediatamente anterior ao proxima a analizar.
+                prev_node = next_node; // Lembra o nodo imediatamente anterior ao proximo a analizar.
                 next_node = next_node->next; }
 
-                // Chegamos ao final da fila e new tem o maior count
+            // Chegamos ao final da fila e new tem o maior count
             else {
-                next_node->next = new; // Coloca new aa direita de next_node
-                break; } // Iteraçao atual concluida.
+                next_node->next = new; // Coloca new á direita de next_node
+                break; } // Iteração atual concluida.
         }
 
-        // Se next_node->next == new, ja re-inserimos new na lista. Atualize head e prossiga.
+        // Se next_node->next == new, já re-inserimos new na lista. Atualize head e prossiga.
         if (next_node->next == new) {
             list_head = right->next;
             continue; }
 
         // Se chegamos aqui, ou (new->count == next_node->count) ou (new->count < next_node->count)
-        new->next = next_node; // Insere new aa esquerda de next_node
+        new->next = next_node; // Insere new á esquerda de next_node
 
-        // Se next_node ainda eh right->next, nada foi navegado pois new foi menor que o elemento seguinte
+        // Se next_node ainda é right->next, nada foi navegado pois new foi menor que o elemento seguinte
         if (next_node == right->next)
-            list_head = new; // Entao new eh a nova cabeça
-        else { // Caso contrario, new ta depois de prev_node e antes de next_node
-            prev_node->next = new; // prev_node agora aponta para new que por sua vez ja aponta para next_node
+            list_head = new; // Então new é a nova cabeça
+
+        // Caso contrario, new está depois de prev_node e antes de next_node
+        else {
+            prev_node->next = new; // prev_node agora aponta para new, que por sua vez já aponta para next_node
             list_head = right->next; } // Atualiza head
+
     }
 
+    // Debug
     dfprint("build_huffman_tree() :: Sucesso na criaçao da arvore!\n");
-
     if (DEBUG) {
         unsigned long buffer_length = 4096;
         unsigned long buffer_load = 0;
         byte* buffer = (byte*)malloc(sizeof(byte)*buffer_length);
-        dump_huffnode_tree("huffman_tree_orig.log", root, 0, buffer, &buffer_load, buffer_length);
-        free(buffer);
-    }
+        dump_huffnode_tree("logs/huffman_tree_orig.log", root, 0, buffer, &buffer_load, buffer_length);
+        free(buffer); }
 
     return root;
 }
-
 
 
 void build_tree_preorder_array(HufNode* node, byte* buffer, unsigned long * buffer_load, unsigned long buffer_length)
@@ -252,10 +235,10 @@ void build_tree_preorder_array(HufNode* node, byte* buffer, unsigned long * buff
     append_byte(buffer, node->value, *buffer_load, buffer_length);
     *buffer_load += 1;
 
+    // Recursão
     build_tree_preorder_array(node->left, buffer, buffer_load, buffer_length);
     build_tree_preorder_array(node->right, buffer, buffer_load, buffer_length);
 }
-
 
 
 HufNode* rebuild_tree_from_byte_array(const byte* byte_array, unsigned int* curr_index, unsigned int tree_arr_length)
@@ -270,14 +253,7 @@ HufNode* rebuild_tree_from_byte_array(const byte* byte_array, unsigned int* curr
     byte curr_byte = byte_array[*curr_index];
     *curr_index += 1;
 
-    // Se curr_byte é um '\\', estamos escapando um * ou \. Pegue próximo caracter.
-    if (curr_byte == '\\') {
-        curr_byte = byte_array[*curr_index];
-        *curr_index += 1; }
-
-    // Salva valor atual no nó/folha
-    new_node->value = curr_byte;
-
+    // Debuga o caracter atual
     dfprint(" %c", curr_byte);
 
     // Veremos se estamos em nó ou folha
@@ -285,6 +261,14 @@ HufNode* rebuild_tree_from_byte_array(const byte* byte_array, unsigned int* curr
         new_node->left = rebuild_tree_from_byte_array(byte_array, curr_index, tree_arr_length);
         new_node->right = rebuild_tree_from_byte_array(byte_array, curr_index, tree_arr_length);
     }
+
+    // Se curr_byte é um '\\', estamos escapando um * ou \. Pegue próximo caracter
+    if (curr_byte == '\\') {
+        curr_byte = byte_array[*curr_index];
+        *curr_index += 1; }
+
+    // Salva valor atual no nó/folha
+    new_node->value = curr_byte;
 
     // Retorna nó atual
     return new_node;

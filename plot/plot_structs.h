@@ -30,7 +30,7 @@ ABB* create_binary_tree(long int item, ABB *left,ABB *right)
 
 }
 
-extern int comp = 0;
+int comp;
 
 typedef struct AVL{
 
