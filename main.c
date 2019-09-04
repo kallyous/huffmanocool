@@ -41,7 +41,7 @@ int main(int argc, byte * argv[])
         final_length = unpack(); }
 
     else {
-        dfprint("Rotina não definida, encerrando...\n");
+        printf("Rotina não definida, encerrando...\n");
         return 255; }
 
     printf("\nEscrito %llu bytes.\n", final_length);

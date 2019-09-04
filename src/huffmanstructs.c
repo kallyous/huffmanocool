@@ -215,7 +215,7 @@ HufNode* build_huffman_tree(HufNode * head)
 }
 
 
-void build_tree_preorder_array(HufNode* node, byte* buffer, unsigned long * buffer_load, unsigned long buffer_length)
+void build_tree_preorder_array(HufNode* node, byte* buffer, unsigned int * buffer_load, unsigned int buffer_length)
 {
     // Condição de saída
     if (!node) return;

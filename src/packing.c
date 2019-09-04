@@ -12,7 +12,7 @@
 #include "bytetable.h"
 
 
-unsigned long pack()
+unsigned long long pack()
 {
     // Carrega arquivo a compactar no buffer (e seu tamanho em buffer_length)
     byte * buffer;
@@ -34,8 +34,8 @@ unsigned long pack()
 
     /* Prepara pra montar uma array de bytes representando a arvore em pre-ordem.
      * Essa array vai pro cabeçalho do arquivo compactado. */
-    unsigned long tree_byte_arr_length = 4096;// Espaço mais que sufuciente para armazenar os bytes da arvore em string
-    unsigned long tree_byte_arr_load = 0;
+    unsigned int tree_byte_arr_length = 513;// Espaço sufuciente para armazenar os bytes da arvore
+    unsigned int tree_byte_arr_load = 0;
     byte tree_byte_arr[tree_byte_arr_length];
 
     // Constroi stream em pre-ordem que descreve a arvore
@@ -48,6 +48,7 @@ unsigned long pack()
     dfprint("Construindo tabela de bytes compactados...\n\n");
     byte code[9]; // String temporaria para o processo de empacotamento
     strcpy(code, ""); // Começa vazia
+
     // Viaja pela arvore construindo a tabela de compressao
     build_packing_table(tree_root, byte_table, code);
 
@@ -61,7 +62,7 @@ unsigned long pack()
     byte* compressed_buffer;
 
     // Armazena tamanho do buffer depois de compactado
-    unsigned long compressed_buffer_length;
+    unsigned long long compressed_buffer_length;
 
     // Armazena quantos bits de lixo ficou no ultimo byte
     unsigned int last_byte_garbage;
@@ -71,16 +72,17 @@ unsigned long pack()
 
     // Constrói cabeçalho
     byte* header = build_header(tree_byte_arr, tree_byte_arr_load, last_byte_garbage);
-    unsigned int header_length = tree_byte_arr_load + 2; // Tamanho da string da árvore mais os dois bytes do começo
+
+    // Tamanho da string da árvore mais os dois bytes do começo
+    unsigned int header_length = tree_byte_arr_load + 2;
 
     // Escreve arquivo
-    FILE* fptr;
-    fptr = fopen(output, "wb");
+    FILE* fptr = fopen(output, "wb");
     fwrite(header, sizeof(byte), header_length, fptr);
     fwrite(compressed_buffer, sizeof(byte), compressed_buffer_length, fptr);
     fclose(fptr);
 
-    // Tamanho compactado
+    // Tamanho do buffer compactado
     return header_length + compressed_buffer_length;
 }
 
@@ -108,11 +110,12 @@ byte* build_header(const byte* tree_byte_arr, unsigned long tree_byte_arr_length
 }
 
 
-byte* compress_byte_stream(const byte* stream, unsigned long stream_length,
-        byte* table[], unsigned long * compressed_size, unsigned int * garbage_length)
+byte* compress_byte_stream(const byte* stream, unsigned long long stream_length,
+        byte* table[], unsigned long long * compressed_size, unsigned int * garbage_length)
 {
-    // O tamanho maximo teorico de buffer nunca sera maior que o tamanho de stream
-    byte* buffer = (byte*)malloc(sizeof(byte) * stream_length);
+    // Tamanho grande o suficiente pra segurar o buffer compactado
+    byte* buffer = (byte*)malloc(sizeof(byte) * stream_length * 2);
+
     if (!buffer) {
         dfprint("Erro na allocação de %d bytes.\n", stream_length);
         return NULL; }
@@ -121,15 +124,15 @@ byte* compress_byte_stream(const byte* stream, unsigned long stream_length,
     for (int a=0; a < stream_length; a++) buffer[a] = 0;
 
     // Registra o byte sendo lido de stream
-    unsigned long sb;
+    unsigned long long sb;
 
     // Tamanho final do stream compactado de bytes (buffer)
     *compressed_size = 1;
 
-    // Segura a string de 0/1's sendo escrita durante compactaçao
+    // Segura a string de 0/1's sendo usada durante compactação
     byte code[9];
 
-    // Registra o one_byte sendo escrito durante compactaçao
+    // Registra o byte sendo escrito durante compactaçao
     unsigned long one_byte = 0;
 
     // Registra o bit sendo definido durante compactaçao
@@ -169,7 +172,7 @@ byte* compress_byte_stream(const byte* stream, unsigned long stream_length,
 
             // Atualiza qual byte de buffer está sendo escrito atualmente
             if (++bit > 7) { // Passou do último bit do byte atual
-                one_byte++; // Avança para o próximo byte
+                one_byte++; // Avança para o próximo byte de escrita
                 bit = 0; // Será definido o primeiro bit do próximo byte no próximo ciclo
                 *compressed_size += 1; } // Mais um byte será usado, aumentando o tamanho final em 1
         }

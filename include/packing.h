@@ -9,7 +9,7 @@
  *
  *  O: a definir
  */
-unsigned long pack();
+unsigned long long pack();
 
 
 /* Comprime dados usando arvore gerada previamente
@@ -21,8 +21,8 @@ unsigned long pack();
  *
  *  Obs: Ao terminar, garbage_length tera quantos bits de lixo o ultimo one_byte possui.
  */
-byte* compress_byte_stream(const byte* stream, unsigned long stream_length,
-        byte* table[], unsigned long * compressed_size, unsigned int * garbage_length);
+byte* compress_byte_stream(const byte* stream, unsigned long long stream_length,
+        byte* table[], unsigned long long * compressed_size, unsigned int * garbage_length);
 
 
 /*  Constroi o cabeçalho do arquivo compactado

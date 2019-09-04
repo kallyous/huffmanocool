@@ -89,7 +89,7 @@ HufNode* build_huffman_tree(HufNode* freq_list);
  *          de bytes, para ter certeza qu nao vai bugar com bytes que
  *          representam valores bugados. Nao confiamos em strings de byte.
  */
-void build_tree_preorder_array(HufNode* node, byte* buffer, unsigned long * buffer_load, unsigned long buffer_length);
+void build_tree_preorder_array(HufNode* node, byte* buffer, unsigned int * buffer_load, unsigned int buffer_length);
 
 
 

@@ -45,14 +45,14 @@ unsigned long unpack()
 
     // Carrega arquivo a descompactar no buffer (e seu tamanho em buffer_length)
     byte * buffer;
-    unsigned long buffer_length;
+    unsigned long long buffer_length;
     buffer = load_file_into_buffer(FILE_NAME_STR, &buffer_length);
 
     // Define nome de saída
     rewrite_name();
 
     // Exibe tamanho inicial do arquivo
-    printf("Lidos %lu bytes\n", buffer_length);
+    printf("Lidos %llu bytes\n", buffer_length);
 
     // Cabeçalho: Pega os três bits que informam o lixo do último byte
     byte last_byte_garbage = buffer[0] >> 5;
@@ -73,9 +73,11 @@ unsigned long unpack()
         for (int i=2; i < tree_length +2; i++) dfprint("%c", buffer[i]);
         dfprint("\n"); }
 
-    // Recria árvore binária
-    unsigned int tree_byte_arr_index = 2;
-    HufNode* tree_root = rebuild_tree_from_byte_array(buffer, &tree_byte_arr_index, tree_length+2); // +2 é o offset causado pelos dois bytes iniciais que informam o tamanho da árvore e a quantidade de bits de lixo
+    /* Reconstroi árvore binária
+     * +2 é o offset causado pelos dois bytes iniciais que informam o tamanho da árvore
+     * e a quantidade de bits de lixo */
+    unsigned int tree_byte_arr_index = 2; // Índice inicial da árvore
+    HufNode* tree_root = rebuild_tree_from_byte_array(buffer, &tree_byte_arr_index, tree_length+2);
 
     // Pro debug no terminal
     dfprint("\n");
@@ -178,7 +180,7 @@ unsigned long unpack()
                 if (bit_val == 0)
                     curr_node = curr_node->left;
 
-                    // Navega à direita se for outro valor
+                // Navega à direita se for outro valor
                 else
                     curr_node = curr_node->right;
 

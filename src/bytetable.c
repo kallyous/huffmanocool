@@ -25,7 +25,7 @@ byte** prepare_packing_table()
 
 void build_packing_table(HufNode* node, byte* table[], byte* code)
 {
-    // Caso seja uma folha, armazene em table, no indice de seu respectivo byte, o caminho percorrido.
+    // Caso seja uma folha, armazene em table a string que descreve o caminho percorrido. (No indice de seu respectivo byte)
     if (!(node->left || node->right)) {
         strcpy(table[node->value], code);
         return; }
