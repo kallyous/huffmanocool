@@ -9,15 +9,7 @@
  *
  *  O: a definir
  */
-unsigned long packing_routine();
-
-
-
-/*  Reune as operações de descompactação de arquivo.
- *
- */
-unsigned long unpacking_routine();
-
+unsigned long pack();
 
 
 /* Comprime dados usando arvore gerada previamente
@@ -40,7 +32,6 @@ byte* compress_byte_stream(const byte* stream, unsigned long stream_length,
  *  O: Cadeia de bytes contendo o cabeçalho
  */
 byte* build_header(const byte* tree_byte_arr, unsigned long tree_byte_arr_length, byte last_byte_garbage);
-
 
 
 #endif //HUFFMANOCOOL_PACKING_H

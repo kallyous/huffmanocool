@@ -14,6 +14,7 @@
 #include "huffmanstructs.h"
 #include "bytetable.h"
 #include "packing.h"
+#include "unpacking.h"
 
 
 int main(int argc, byte * argv[])
@@ -32,11 +33,11 @@ int main(int argc, byte * argv[])
     if (OPERATION == 'P') {
         dfprint("Rotina de compactação escolhida.\n");
         printf("Compactadno %s ...\n", FILE_NAME_STR);
-        final_length = packing_routine(); }
+        final_length = pack(); }
     else if (OPERATION == 'U') {
         dfprint("Rotina de descompactação escolhida.\n");
         printf("Descompactadno %s ...\n", FILE_NAME_STR);
-        final_length = unpacking_routine(); }
+        final_length = unpack(); }
     else {
         dfprint("Rotina não definida, encerrando...\n");
         return 255; }

@@ -3,7 +3,6 @@
 #include <stdio.h>
 
 #include "globals.h"
-#include "assist.h"
 #include "debug.h"
 #include "fileio.h"
 
@@ -45,19 +44,5 @@ byte* load_file_into_buffer(byte * file_path, unsigned long * buffer_length)
     *buffer_length = temp_length;
 
     return buffer;
-}
-
-
-int write_from_buffer(byte * file_name, byte * buffer, unsigned long buffer_length)
-{
-    FILE * fptr;
-
-    fptr = fopen(file_name, "w");
-
-    fwrite(buffer, 1, buffer_length, fptr);
-
-    fclose(fptr);
-
-    return 0;
 }
 
