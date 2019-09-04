@@ -118,16 +118,21 @@ unsigned long unpacking_routine()
 
     // Cabeçalho: Pega os 13 bits que informam o tamanho da arvore.
     unsigned int part_a = buffer[1];
-    unsigned int part_b = buffer[0] << 3;
-    part_b = part_b >> 3;
+    unsigned int part_b = buffer[0] & 31U;
+    part_b = part_b << 8;
     unsigned int tree_length = part_a | part_b;
 
     dfprint("Tamanho da árvore: %d\n", tree_length);
 
     // Recria árvore binária
     unsigned int tree_byte_arr_index = 2;
-    dfprint("Recriando árvore...\n");
-    HufNode* tree_root = rebuild_tree_from_byte_array(buffer, &tree_byte_arr_index, tree_length);
+    if (DEBUG) {
+        dfprint("Recriando árvore...\n");
+        for (int i=tree_byte_arr_index; i < tree_length +2; i++) dfprint("%c", buffer[i]);
+        dfprint("\n"); }
+
+    HufNode* tree_root = rebuild_tree_from_byte_array(buffer, &tree_byte_arr_index, tree_length+2); // +2 é o offset causado pelos dois bytes iniciais que informam o tamanho da árvore e a quantidade de bits de lixo
+
     dfprint("\n");
 
     // Loga árvore reconstruida

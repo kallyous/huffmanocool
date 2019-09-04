@@ -1,3 +1,4 @@
+pdf("plot.pdf")
 setwd("/home/kallyous/Projetos/huffmanocool/plot")
 abb_avl <-read.table("Plot.txt",header=TRUE)
 attach(abb_avl)

@@ -2,21 +2,22 @@
 #include <stdlib.h>
 #include "plot_structs.h"
 
-int comp;
+extern int comp;
 int main() {
+    comp = 0;
     ABB * binary_tree = NULL;
     AVL * balanced_tree = NULL;
     FILE *comparision;
     comparision = fopen("Plot.txt","w+");
     int number;
-    printf("Adicionando numeros nas arvores...\n")
+    printf("Adicionando numeros nas arvores...\n");
     for (long int i = 0; i < 30000; ++i) {
         number = rand();
         binary_tree = add(binary_tree,number);
         balanced_tree = add_balanced(balanced_tree,number);
     }
     fprintf(comparision,"VALUE\tABB\tAVL\n");
-    printf("Buscando numeros...\n")
+    printf("Buscando numeros...\n");
     for (long int j = 0; j < 30000; ++j) {
         number = rand();
         search(binary_tree,number);
@@ -26,6 +27,6 @@ int main() {
         fprintf(comparision,"%d\n",comp);
     }
     fclose(comparision);
-    printf("Dados escritos com sucesso!");
+    printf("Dados escritos com sucesso!\n");
     return 0;
 }
