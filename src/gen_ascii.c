@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-#include "include/globals.h"
+#include "globals.h"
 
 
 int main(void)

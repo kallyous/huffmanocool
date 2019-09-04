@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/globals.h"
-#include "include/assist.h"
-#include "include/huffmanstructs.h"
-#include "include/huffmanstructsdebug.h"
+#include "globals.h"
+#include "assist.h"
+#include "huffmanstructs.h"
+#include "huffmanstructsdebug.h"
 
 
 byte* dump_huffnode_tree(byte* file_name, HufNode* node, int level, byte* buffer, unsigned long * buffer_load,

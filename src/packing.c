@@ -3,14 +3,14 @@
 #include <string.h>
 #include <limits.h>
 
-#include "include/globals.h"
-#include "include/assist.h"
-#include "include/packing.h"
-#include "include/stdoutdebug.h"
-#include "include/fileloader.h"
-#include "include/huffmanstructs.h"
-#include "include/bytetable.h"
-#include "include/huffmanstructsdebug.h"
+#include "globals.h"
+#include "assist.h"
+#include "packing.h"
+#include "stdoutdebug.h"
+#include "fileloader.h"
+#include "huffmanstructs.h"
+#include "bytetable.h"
+#include "huffmanstructsdebug.h"
 
 
 unsigned long packing_routine()
@@ -81,7 +81,6 @@ unsigned long packing_routine()
     // Tamanho compactado
     return header_length + compressed_buffer_length;
 }
-
 
 
 unsigned long unpacking_routine()
@@ -260,7 +259,6 @@ unsigned long unpacking_routine()
 }
 
 
-
 byte* build_header(const byte* tree_byte_arr, unsigned long tree_byte_arr_length, byte last_byte_garbage)
 {
     byte* header = (byte*)malloc(sizeof(byte) * (tree_byte_arr_length + 2));
@@ -281,7 +279,6 @@ byte* build_header(const byte* tree_byte_arr, unsigned long tree_byte_arr_length
 
     return header;
 }
-
 
 
 byte* compress_byte_stream(const byte* stream, unsigned long stream_length,

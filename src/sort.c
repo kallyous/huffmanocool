@@ -1,5 +1,5 @@
-#include "include/sort.h"
-#include "include/huffmanstructs.h"
+#include "sort.h"
+#include "huffmanstructs.h"
 
 
 

@@ -3,15 +3,13 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "include/globals.h"
-#include "include/stdoutdebug.h"
-#include "include/argdefs.h"
-
+#include "globals.h"
+#include "stdoutdebug.h"
+#include "argdefs.h"
 
 
 extern byte * FILE_NAME_STR;
 extern byte OPERATION;
-
 
 
 bool parse_arguments(int argc, byte * argv[])

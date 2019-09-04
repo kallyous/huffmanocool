@@ -2,11 +2,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "include/globals.h"
-#include "include/assist.h"
-#include "include/stdoutdebug.h"
-#include "include/fileloader.h"
-
+#include "globals.h"
+#include "assist.h"
+#include "stdoutdebug.h"
+#include "fileloader.h"
 
 
 byte* load_file_into_buffer(byte * file_path, unsigned long * buffer_length)
@@ -47,7 +46,6 @@ byte* load_file_into_buffer(byte * file_path, unsigned long * buffer_length)
 
     return buffer;
 }
-
 
 
 int write_from_buffer(byte * file_name, byte * buffer, unsigned long buffer_length)

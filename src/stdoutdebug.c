@@ -3,13 +3,11 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include "include/globals.h"
-#include "include/stdoutdebug.h"
-
+#include "globals.h"
+#include "stdoutdebug.h"
 
 
 extern bool DEBUG;
-
 
 
 void dfprint(const byte * format, ...)
@@ -21,7 +19,6 @@ void dfprint(const byte * format, ...)
         va_end( arglist ); // Libera memória
     }
 }
-
 
 
 void load_debug_setting(int argc, byte * argv[])
