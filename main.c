@@ -10,7 +10,7 @@
 #include "assist.h"
 #include "debug.h"
 #include "argdefs.h"
-#include "fileloader.h"
+#include "fileio.h"
 #include "huffmanstructs.h"
 #include "bytetable.h"
 #include "packing.h"

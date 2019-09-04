@@ -1,5 +1,5 @@
-#ifndef HUFFMANOCOOL_FILELOADER_H
-#define HUFFMANOCOOL_FILELOADER_H
+#ifndef HUFFMANOCOOL_FILEIO_H
+#define HUFFMANOCOOL_FILEIO_H
 
 
 
@@ -15,4 +15,4 @@ int write_from_buffer(byte * file_name, byte * buffer, unsigned long buffer_leng
 
 
 
-#endif //HUFFMANOCOOL_FILELOADER_H
+#endif //HUFFMANOCOOL_FILEIO_H

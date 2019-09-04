@@ -5,7 +5,7 @@
 #include "globals.h"
 #include "assist.h"
 #include "debug.h"
-#include "fileloader.h"
+#include "fileio.h"
 
 
 byte* load_file_into_buffer(byte * file_path, unsigned long * buffer_length)

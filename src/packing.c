@@ -7,7 +7,7 @@
 #include "assist.h"
 #include "packing.h"
 #include "debug.h"
-#include "fileloader.h"
+#include "fileio.h"
 #include "huffmanstructs.h"
 #include "bytetable.h"
 
