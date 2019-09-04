@@ -6,4 +6,8 @@
  */
 unsigned long unpack();
 
+bool validate_name();
+
+void rewrite_name();
+
 #endif //HUFFMANOCOOL_UNPACKING_H

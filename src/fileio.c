@@ -7,11 +7,11 @@
 #include "fileio.h"
 
 
-byte* load_file_into_buffer(byte * file_path, unsigned long * buffer_length)
+byte* load_file_into_buffer(byte * file_path, unsigned long long * buffer_length)
 {
     FILE * fptr;
     size_t result;
-    int temp_length;
+    unsigned long long temp_length;
     byte * buffer;
 
     fptr = fopen(file_path , "r");
@@ -26,6 +26,7 @@ byte* load_file_into_buffer(byte * file_path, unsigned long * buffer_length)
 
     // Alloca memória para conter arquivo
     buffer = (byte*)malloc(sizeof(byte) * temp_length);
+
     if (!buffer) {
         dfprint("Erro na allocação de %d bytes.\n", temp_length);
         return NULL;

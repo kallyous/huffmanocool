@@ -7,7 +7,7 @@
 #include "globals.h"
 
 
-byte* load_file_into_buffer(byte * file_path, unsigned long * buffer_length);
+byte* load_file_into_buffer(byte * file_path, unsigned long long * buffer_length);
 
 
 #endif //HUFFMANOCOOL_FILEIO_H
